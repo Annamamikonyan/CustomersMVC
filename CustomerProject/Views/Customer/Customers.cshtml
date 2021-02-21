@@ -1,0 +1,169 @@
+﻿@model CustomerProject.Models.Customer
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Customers</title>
+
+</head>
+<body>
+    <h1 style="font-weight: bold; font-size: larger ; "> Customers </h1>
+    
+    <p>You can add new customer, fill the form bellow</p>
+    <p> </p>
+
+    @using (Html.BeginForm())
+    {
+        <div style="color:darkred; font-size:18px;">
+            <p>Your name: @Html.TextBoxFor(x => x.CustomerName) </p>
+            <p>Your email: @Html.TextBoxFor(x => x.FirstName)</p>
+            <p>Your phone: @Html.TextBoxFor(x => x.Age)</p>
+            <input type="submit" value="Add" />
+        </div>
+    }
+    <p></p>
+    <input type="submit" value="Refresh"/>
+    <p></p>
+    <div>
+        <table border="1">
+            <tr>
+                <th>ID</th>
+                <th>Customer name</th>
+                <th>Firstname</th>
+                <th>Age</th>
+                <th>Is active customer</th>
+                <th>Image path</th>
+            </tr>
+            @foreach (var customer in ViewBag.CustomerList)
+            {
+                <tr>
+                    <td>@customer.ID </td>
+                    <td>@customer.CustomerName</td>
+                    <td> @customer.FirstName</td>
+                    <td>@customer.Age </td>
+                    <td> @customer.IsActive</td>
+                    <td> @customer.ImagePath</td>
+                </tr>
+            }
+        </table>
+
+
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

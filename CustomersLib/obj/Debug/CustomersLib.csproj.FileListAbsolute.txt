@@ -1,0 +1,6 @@
+C:\Users\mamik\source\repos\CustomerProject\CustomersLib\bin\Debug\CustomersLib.dll
+C:\Users\mamik\source\repos\CustomerProject\CustomersLib\bin\Debug\CustomersLib.pdb
+C:\Users\mamik\source\repos\CustomerProject\CustomersLib\obj\Debug\CustomersLib.csprojAssemblyReference.cache
+C:\Users\mamik\source\repos\CustomerProject\CustomersLib\obj\Debug\CustomersLib.csproj.CoreCompileInputs.cache
+C:\Users\mamik\source\repos\CustomerProject\CustomersLib\obj\Debug\CustomersLib.dll
+C:\Users\mamik\source\repos\CustomerProject\CustomersLib\obj\Debug\CustomersLib.pdb
