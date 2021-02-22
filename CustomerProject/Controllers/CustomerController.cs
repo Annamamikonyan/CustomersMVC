@@ -14,6 +14,7 @@ namespace CustomerProject.Controllers
         public async Task<ViewResult> Customers()
            
         {
+            var result1 = Data.Customers.CustomerWIthSqlDataAdapter.GetCustomersFromDBAsync1();
             var result = new List<CustomerProject.Models.Customer >();
             var customerList = await Data.Customers.CutomerLibrary.GetCustomersFromDBAsync();
             foreach (var item in customerList)

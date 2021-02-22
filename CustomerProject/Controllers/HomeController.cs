@@ -11,6 +11,7 @@ namespace CustomerProject.Controllers
         // GET: Home
         public ViewResult Index()
         {
+
             return View();
         }        
     }
