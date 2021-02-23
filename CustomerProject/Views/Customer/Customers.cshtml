@@ -5,58 +5,59 @@
 }
 <!DOCTYPE html>
 <html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Customers</title>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Customers</title>
 
-</head>
-<body>
-    <h1 style="font-weight: bold; font-size: larger ; "> Customers </h1>
+    </head>
+    <body>
+        <h1 style="font-weight: bold; font-size: larger ; "> Customers </h1>
 
-    <p>You can add new customer, fill the form bellow</p>
-    <p> </p>
+        <p>You can add new customer, fill the form bellow</p>
+        <p> </p>
 
-    @using (Html.BeginForm())
-    {
-    
-        @Html.ValidationSummary()
+        @using (Html.BeginForm("Customers", "Customer", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
 
-<div style="color:darkred; font-size:18px;">
-    <p>Full Name : @Html.TextBoxFor(x => x.CustomerName) </p>
-    <p>FirstName : @Html.TextBoxFor(x => x.FirstName)</p>
-    <p>Age       : @Html.TextBoxFor(x => x.Age)</p>
-    <p>Is Active : @Html.CheckBoxFor(x => x.IsActive)</p>
-    <label for="file">Upload Image:</label>
-    <input type="file" name="file" id="file" style="width: 100%;" />
-    <input type="submit" value="Add" />
-</div>
-    }
-    <p></p>
-    <input type="submit" value="Refresh" />
-    <p></p>
-    <div>
-        <table border="1">
-            <tr>
-                <th>ID</th>
-                <th>Customer name</th>
-                <th>Firstname</th>
-                <th>Age</th>
-                <th>Is active customer</th>
-                <th>Image path</th>
-            </tr>
-            @foreach (var customer in ViewBag.CustomerList)
-            {
+            @Html.ValidationSummary()
+
+            <div style="color:darkred; font-size:18px;">
+                <p>Full Name : @Html.TextBoxFor(x => x.CustomerName) </p>
+                <p>FirstName : @Html.TextBoxFor(x => x.FirstName)</p>
+                <p>Age       : @Html.TextBoxFor(x => x.Age)</p>
+                <p>Is Active : @Html.CheckBoxFor(x => x.IsActive)</p>
+                <label for="file">Upload Image:</label>
+                <input type="file" name="avatar" id="file" style="width: 100%;" />
+                <input type="submit" value="Add" />
+            </div>
+        }
+        <p></p>
+
+        <input type="submit" value="Refresh" />
+        <p></p>
+        <div>
+            <table border="1">
                 <tr>
-                    <td>@customer.ID </td>
-                    <td>@customer.CustomerName</td>
-                    <td> @customer.FirstName</td>
-                    <td>@customer.Age </td>
-                    <td> @customer.IsActive</td>
-                    <td> @customer.ImagePath</td>
+                    <th>ID</th>
+                    <th>Customer name</th>
+                    <th>Firstname</th>
+                    <th>Age</th>
+                    <th>Is active customer</th>
+                    <th>Image path</th>
                 </tr>
-            }
-        </table>
-    </div>
+                @foreach (var customer in ViewBag.CustomerList)
+                {
+                    <tr>
+                        <td>@customer.ID </td>
+                        <td>@customer.CustomerName</td>
+                        <td> @customer.FirstName</td>
+                        <td>@customer.Age </td>
+                        <td> @customer.IsActive</td>
+                        <td> @customer.ImagePath</td>
+                    </tr>
+                }
+            </table>
+        </div>
     </body>
 </html>
 
