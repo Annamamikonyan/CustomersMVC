@@ -10,7 +10,31 @@ namespace Data.Customers
    
 public class CutomerLibrary
     {
-        private static string _connectionString = $"Data Source=JTPC-42\\SQLEXPRESS;Initial Catalog=Test;Integrated Security=True";
+        private static string _connectionString = $"Data Source=DESKTOP-00Q2C43\\SQLEXPRESS;Initial Catalog=Test;Integrated Security=True";
+        public static void AddCustomer(Customer customer)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection())
+                {
+                    con.ConnectionString = _connectionString;
+                    con.Open();
+                    SqlCommand command = new SqlCommand();
+                    command.CommandType = System.Data.CommandType.Text ;
+                    command.CommandText = "insert into CUSTOMERS (CustomerName, FirstName, Age, ImagePath, Active) " +
+                        "Values ('Test test', 'test', 43, null,1)";
+                    command.Connection = con;
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+           
+
+        }
         public static async  Task<List<Customer>> GetCustomersFromDBAsync()
         {
             var result = new List<Customer>();
