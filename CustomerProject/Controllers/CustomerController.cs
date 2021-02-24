@@ -41,6 +41,34 @@ namespace CustomerProject.Controllers
             return View();
         }
 
+        [HttpGet]
+        public async Task<ActionResult> MasterDetailsAjaxHandler()      
+        {
+            //var result1 = Data.Customers.CustomerWIthSqlDataAdapter.GetCustomersFromDBAsync1();
+            var result = new List<CustomerProject.Models.Customer>();
+
+            var customerList = await Data.Customers.CutomerLibrary.GetCustomersFromDBAsync();
+            foreach (var item in customerList)
+            {
+                Models.Customer customer = new Models.Customer
+                {
+                    FirstName = item.FirstName,
+                    ID = item.ID,
+                    CustomerName = item.CustomerName,
+                    Age = item.Age,
+                    ImagePath = item.ImagePath,
+                    IsActive = item.IsActive
+                };
+
+                result.Add(customer);
+            }
+
+            return Json(new
+            {               
+                aaData = result
+            }, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public  async Task<ViewResult> Customers(Models.Customer newCustomer, HttpPostedFileBase avatar)
         {
@@ -62,10 +90,10 @@ namespace CustomerProject.Controllers
                 Data.Customers.CutomerLibrary.AddCustomer(cust);
 
                 // Add customer avatar to AWS S3 storage
-                if (avatar != null)
-                {
-                    var response = Common.Helpers.AwsAdapter.AwsS3FileUpdload(_bucketName, _folderName, avatar);
-                }
+                //if (avatar != null)
+                //{
+                //    var response = Common.Helpers.AwsAdapter.AwsS3FileUpdload(_bucketName, _folderName, avatar);
+                //}
 
                 var result = new List<CustomerProject.Models.Customer>();
                 var customerList = await Data.Customers.CutomerLibrary.GetCustomersFromDBAsync();

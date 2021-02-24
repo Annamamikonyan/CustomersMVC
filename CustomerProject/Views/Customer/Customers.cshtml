@@ -12,25 +12,25 @@
     <title>Customers</title>
 
 </head>
-    <body>
-        <h1 style="font-weight: bold; font-size: larger ;margin :10px "> Customers </h1>
+<body>
+    <h1 style="font-weight: bold; font-size: larger ;margin :10px "> Customers </h1>
 
-        <p style=" margin : 10px;">You can add new customer, fill the form bellow</p>
-        <p> </p>
+    <p style=" margin : 10px;">You can add new customer, fill the form bellow</p>
+    <p> </p>
 
-        @using (Html.BeginForm("Customers", "Customer", FormMethod.Post, new { enctype = "multipart/form-data" }))
-        {
-            @Html.ValidationSummary()
+    @using (Html.BeginForm("Customers", "Customer", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.ValidationSummary()
         <div>
-            <div>            
-                <label class="label">Full Name :</label>             
-                @Html.TextBoxFor(x => x.CustomerName , new { @class = "textbox" }) 
-            </div>           
-                <label class="label">FirstName : </label>
-                @Html.TextBoxFor(x => x.FirstName, new { @class = "textbox" })
-           
-            <div>                
-               <label class="label">Age       : </label>                
+            <div>
+                <label class="label">Full Name :</label>
+                @Html.TextBoxFor(x => x.CustomerName, new { @class = "textbox" })
+            </div>
+            <label class="label">FirstName : </label>
+            @Html.TextBoxFor(x => x.FirstName, new { @class = "textbox" })
+
+            <div>
+                <label class="label">Age       : </label>
                 @Html.TextBoxFor(x => x.Age, new { @class = "textbox" })
             </div>
             <div>
@@ -39,39 +39,67 @@
             </div>
             <label class="label" for="file">Upload Image:</label>
             <p></p>
-            <input type="file" name="avatar" id="file"  class="button" />
+            <input type="file" name="avatar" id="file" class="button" />
             <p></p>
             <input type="submit" value="Add" class="button" />
         </div>
-        }
-        <p></p>
+    }
+    <p></p>
 
-        <input type="submit" value="Refresh" class="button" />
-        <p></p>
-        <div>
-            <table border="1" style=" padding: 5px; margin :10px" >
+    <input type="submit" id="Refresh" value="Refresh" class="button" />
+    @*@section scripts{
+            <script>
+                $("#Refresh").click(function () {
+                $.ajax({
+                    url: '/Customer/CustomersForTable',
+                    success: function (data) {
+                        $("#CustomerData").html(data);
+                    }
+                })
+            })
+            </script>
+        }*@
+    @section head{
+        <script language="javascript" type="text/javascript">
+            $(document).ready(function () {
+
+                var CustomerData = $('#CustomerData').dataTable({
+                    "bJQueryUI": true,
+                    "bServerSide": true,
+                    "sAjaxSource": "MasterDetailsAjaxHandler"
+                });
+
+                $("#Refresh").click(function (e) {
+                    oEmployeesTable.fnDraw();
+                });
+            });
+        </script>
+    }
+    <p></p>
+    <div>
+        <table border="1" id="CustomerData" style=" padding: 5px; margin :10px">
+            <tr>
+                <th>ID</th>
+                <th>Customer name</th>
+                <th>Firstname</th>
+                <th>Age</th>
+                <th>Is active customer</th>
+                <th>Image path</th>
+            </tr>
+            @foreach (var customer in ViewBag.CustomerList)
+            {
                 <tr>
-                    <th>ID</th>
-                    <th>Customer name</th>
-                    <th>Firstname</th>
-                    <th>Age</th>
-                    <th>Is active customer</th>
-                    <th>Image path</th>
+                    <td>@customer.ID </td>
+                    <td>@customer.CustomerName</td>
+                    <td> @customer.FirstName</td>
+                    <td>@customer.Age </td>
+                    <td> @customer.IsActive</td>
+                    <td> @customer.ImagePath</td>
                 </tr>
-                @foreach (var customer in ViewBag.CustomerList)
-                {
-                    <tr>
-                        <td>@customer.ID </td>
-                        <td>@customer.CustomerName</td>
-                        <td> @customer.FirstName</td>
-                        <td>@customer.Age </td>
-                        <td> @customer.IsActive</td>
-                        <td> @customer.ImagePath</td>
-                    </tr>
-                }
-            </table>
-        </div>
-    </body>
+            }
+        </table>
+    </div>
+</body>
 </html>
 
 

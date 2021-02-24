@@ -45,7 +45,7 @@
 
     .textbox:focus, input.input_text_focus {
         border-color: #646464;
-        background-color: #fee;
+        background-color: #fdfec1
     }
 
 .label  {
