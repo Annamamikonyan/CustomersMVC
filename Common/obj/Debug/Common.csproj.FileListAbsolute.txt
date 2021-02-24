@@ -1,0 +1,13 @@
+C:\Users\anna.mamikonyan\source\repos\CustomersMVC\Common\bin\Debug\Common.dll
+C:\Users\anna.mamikonyan\source\repos\CustomersMVC\Common\bin\Debug\Common.pdb
+C:\Users\anna.mamikonyan\source\repos\CustomersMVC\Common\bin\Debug\AWSSDK.Core.dll
+C:\Users\anna.mamikonyan\source\repos\CustomersMVC\Common\bin\Debug\AWSSDK.S3.dll
+C:\Users\anna.mamikonyan\source\repos\CustomersMVC\Common\bin\Debug\AWSSDK.Core.pdb
+C:\Users\anna.mamikonyan\source\repos\CustomersMVC\Common\bin\Debug\AWSSDK.Core.xml
+C:\Users\anna.mamikonyan\source\repos\CustomersMVC\Common\bin\Debug\AWSSDK.S3.pdb
+C:\Users\anna.mamikonyan\source\repos\CustomersMVC\Common\bin\Debug\AWSSDK.S3.xml
+C:\Users\anna.mamikonyan\source\repos\CustomersMVC\Common\obj\Debug\Common.csprojAssemblyReference.cache
+C:\Users\anna.mamikonyan\source\repos\CustomersMVC\Common\obj\Debug\Common.csproj.CoreCompileInputs.cache
+C:\Users\anna.mamikonyan\source\repos\CustomersMVC\Common\obj\Debug\Common.csproj.CopyComplete
+C:\Users\anna.mamikonyan\source\repos\CustomersMVC\Common\obj\Debug\Common.dll
+C:\Users\anna.mamikonyan\source\repos\CustomersMVC\Common\obj\Debug\Common.pdb

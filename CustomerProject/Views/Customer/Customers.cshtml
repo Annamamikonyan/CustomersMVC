@@ -5,38 +5,51 @@
 }
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta name="viewport" content="width=device-width" />
-        <title>Customers</title>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" type="text/css" href="~/Content/Style.css"  />
+    <link rel="stylesheet" type="text/css" href="~/Content/ButtonStyle.css"  />
+    <title>Customers</title>
 
-    </head>
+</head>
     <body>
-        <h1 style="font-weight: bold; font-size: larger ; "> Customers </h1>
+        <h1 style="font-weight: bold; font-size: larger ;margin :10px "> Customers </h1>
 
-        <p>You can add new customer, fill the form bellow</p>
+        <p style=" margin : 10px;">You can add new customer, fill the form bellow</p>
         <p> </p>
 
         @using (Html.BeginForm("Customers", "Customer", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
-
             @Html.ValidationSummary()
-
-            <div style="color:darkred; font-size:18px;">
-                <p>Full Name : @Html.TextBoxFor(x => x.CustomerName) </p>
-                <p>FirstName : @Html.TextBoxFor(x => x.FirstName)</p>
-                <p>Age       : @Html.TextBoxFor(x => x.Age)</p>
-                <p>Is Active : @Html.CheckBoxFor(x => x.IsActive)</p>
-                <label for="file">Upload Image:</label>
-                <input type="file" name="avatar" id="file" style="width: 100%;" />
-                <input type="submit" value="Add" />
+        <div>
+            <div>            
+                <label class="label">Full Name :</label>             
+                @Html.TextBoxFor(x => x.CustomerName , new { @class = "textbox" }) 
+            </div>           
+                <label class="label">FirstName : </label>
+                @Html.TextBoxFor(x => x.FirstName, new { @class = "textbox" })
+           
+            <div>                
+               <label class="label">Age       : </label>                
+                @Html.TextBoxFor(x => x.Age, new { @class = "textbox" })
             </div>
+            <div>
+                <label class="label">Is Active : </label>
+                @Html.CheckBoxFor(x => x.IsActive, new { @class = "textbox" })
+            </div>
+            <label class="label" for="file">Upload Image:</label>
+            <p></p>
+            <input type="file" name="avatar" id="file"  class="button" />
+            <p></p>
+            <input type="submit" value="Add" class="button" />
+        </div>
         }
         <p></p>
 
-        <input type="submit" value="Refresh" />
+        <input type="submit" value="Refresh" class="button" />
         <p></p>
         <div>
-            <table border="1">
+            <table border="1" style=" padding: 5px; margin :10px" >
                 <tr>
                     <th>ID</th>
                     <th>Customer name</th>

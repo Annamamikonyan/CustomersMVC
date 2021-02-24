@@ -10,7 +10,7 @@ namespace Data.Customers
    
 public class CutomerLibrary
     {
-        private static string _connectionString = $"Data Source=DESKTOP-00Q2C43\\SQLEXPRESS;Initial Catalog=Test;Integrated Security=True";
+        private static string _connectionString = $"Data Source=JTPC-42\\SQLEXPRESS;Initial Catalog=Test;Integrated Security=True";
         public static void AddCustomer(Customer customer)
         {
             try
@@ -22,15 +22,29 @@ public class CutomerLibrary
                     SqlCommand command = new SqlCommand();
                     command.CommandType = System.Data.CommandType.Text ;
                     command.CommandText = "insert into CUSTOMERS (CustomerName, FirstName, Age, ImagePath, Active) " +
-                        "Values ('Test test', 'test', 43, null,1)";
+                        "Values (@CustomerName, @FirstName, @Age, @ImagPath, @Active)";
+                    command.Parameters.Add("CustomerName", System.Data.SqlDbType.NVarChar, 100).Value = customer.CustomerName;
+                    command.Parameters.Add("FirstName", System.Data.SqlDbType.NVarChar, 50).Value = customer.FirstName ;
+                    command.Parameters.Add("Age", System.Data.SqlDbType.TinyInt ).Value = customer.Age ;
+                    if (customer.ImagePath == null)
+                    {
+                        command.Parameters.Add("ImagPath", System.Data.SqlDbType.NVarChar).Value = DBNull.Value ;
+                    }
+                    else
+                    {
+                        command.Parameters.Add("ImagPath", System.Data.SqlDbType.NVarChar).Value = customer.ImagePath;
+                    }
+                    
+                    command.Parameters.Add("Active", System.Data.SqlDbType.Bit ).Value = customer.IsActive ;
+
                     command.Connection = con;
                     command.ExecuteNonQuery();
                 }
             }
-            catch (Exception)
+            catch (SqlException e)
             {
 
-                throw;
+                throw e;
             }
            
 
