@@ -25,22 +25,16 @@
     display: none;
 }
 
-.label 
-{
-}
 
 .textbox {
     font-family: verdana, arial, snas-serif;
-    font-size: 15px;
-    color: #000000;
-    padding: 5px;
-    margin : 10px;
-    background: #f0f0f0;
-    border-left: solid 1px #c1c1c1;
-    border-top: solid 1px #cfcfcf;
-    border-right: solid 1px #cfcfcf;
-    border-bottom: solid 1px #6f6f6f;
-    right :0px;
+    font-size: 20px;     
+    margin: 10px;   
+    color: black ;    
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    float: left ;
 }
 
     .textbox:focus, input.input_text_focus {
@@ -48,11 +42,30 @@
         background-color: #fdfec1
     }
 
-.label  {
+.label {
     font-family: verdana, arial, snas-serif;
-    font-size: 15px;
-    color: #000000;
-    padding: 5px;
+    font-size: 20px;
     margin: 10px;
-    width : 5250px
+}
+.form {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+    width : 700px;
+}
+.col-25 {
+    float: left;
+    width: 25%;
+    margin-top: 6px;
+}
+
+.col-75 {
+    float: left;
+    width: 75%;
+    margin-top: 6px;
+}
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
 }

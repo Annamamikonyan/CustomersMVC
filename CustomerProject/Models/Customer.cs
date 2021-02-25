@@ -20,6 +20,6 @@ namespace CustomerProject.Models
         public short Age { get; set; }
         public string ImagePath { get; set; }
         public bool IsActive { get; set; }
-        public HttpPostedFileBase avatar { get; set; }
+        public HttpPostedFileBase avatar { get; set; }        
     }
 }

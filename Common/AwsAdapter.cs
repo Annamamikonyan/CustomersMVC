@@ -9,6 +9,7 @@ using System.Web;
 using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
+using static System.Net.Mime.MediaTypeNames;
 //using Amazon.SimpleSystemsManagement;
 //using Amazon.SimpleSystemsManagement.Model;
 //using IqSoft.CP.Common.Models.AWS;
@@ -85,7 +86,7 @@ namespace Common.Helpers
         //    return result;
         //}
 
-        public static PutObjectResponse AwsS3FileUpdload(string bucket, string path, HttpPostedFileBase sourceFile)
+        public static async Task<PutObjectResponse> AwsS3FileUpdload(string bucket, string path, HttpPostedFileBase sourceFile)
         {
             IAmazonS3 client = new AmazonS3Client(RegionEndpoint.EUCentral1);
 
@@ -97,8 +98,40 @@ namespace Common.Helpers
                 Key = Path.Combine (destPath, sourceFile.FileName)
             };
 
-            PutObjectResponse response = client.PutObject(request);
+            PutObjectResponse response =await  client.PutObjectAsync(request);
             return response;
+        }
+
+        public static async  Task<GetObjectResponse> AwsS3FileDownload(string bucket, string path, string fileName )
+        {
+            IAmazonS3 client = new AmazonS3Client(RegionEndpoint.EUCentral1);
+
+            string destPath = "/" + path; // <-- low-level s3 path uses /
+            GetObjectRequest request = new GetObjectRequest()
+            {
+                // = sourceFile.InputStream,
+                BucketName = bucket,
+                Key = Path.Combine(destPath, "avatar_person1.jpg")
+            };
+           // var file = File.Create();
+            using (GetObjectResponse response = await client.GetObjectAsync(request))
+            {
+                using (StreamReader reader = new StreamReader(response.ResponseStream))
+                {
+                    string contentType = response.Headers["Content-Type"];
+                    string responseBody = reader.ReadToEnd();
+                    // Now you process the response body.
+                    //if (File.Exists(SelectedToDownload.FileName))
+                    //    File.Delete(SelectedToDownload.FileName);
+
+                    //File.WriteAllText(SelectedToDownload.FileName, responseBody);
+                    //string readText = File.ReadAllText(SelectedToDownload.FileName);
+
+
+                }
+            }
+            
+            return new GetObjectResponse();
         }
 
         public static PutObjectResponse AwsS3FileUpdload(string bucket, string partnerName, string path, string content)
