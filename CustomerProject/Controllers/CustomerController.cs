@@ -16,6 +16,7 @@ namespace CustomerProject.Controllers
     {
         private static string _bucketName = "qwaszx111";
         private static string _folderName = "ProjectImages";
+        private static string _bucketURL = "https://qwaszx111.s3.eu-central-1.amazonaws.com/";
         public async Task<ViewResult> Customers()
         {
             //var result1 = Data.Customers.CustomerWIthSqlDataAdapter.GetCustomersFromDBAsync1();
@@ -35,17 +36,15 @@ namespace CustomerProject.Controllers
                 };
 
                 result.Add(customer);
-            }
-            await Common.Helpers.AwsAdapter.AwsS3FileDownload(_bucketName, _folderName, customerList.First().ImagePath);
+            }       
 
             ViewBag.CustomerList = result;
-            return View();
+            return View(new Models.Customer());
         }
 
         [HttpGet]
         public async Task<ActionResult> MasterDetailsAjaxHandler()      
         {
-            //var result1 = Data.Customers.CustomerWIthSqlDataAdapter.GetCustomersFromDBAsync1();
             var result = new List<CustomerProject.Models.Customer>();
 
             var customerList = await Data.Customers.CutomerLibrary.GetCustomersFromDBAsync();
@@ -58,14 +57,12 @@ namespace CustomerProject.Controllers
                     ID = item.ID,
                     CustomerName = item.CustomerName,
                     Age = item.Age,
-                    ImagePath = item.ImagePath,
+                    ImagePath = _bucketURL + item.ImagePath,
                     IsActive = item.IsActive
                 };
 
                 result.Add(customer);
-            }
-
-            await Common.Helpers.AwsAdapter.AwsS3FileDownload(_bucketName, _folderName, customerList.First().ImagePath );
+            }         
 
             return Json(new
             {               
@@ -78,7 +75,7 @@ namespace CustomerProject.Controllers
         {
             try
             {
-                Data.Customers.Customer cust = new Data.Customers.Customer()
+                Data.Customers.Customer dataCust = new Data.Customers.Customer()
                 {
                     CustomerName = newCustomer.CustomerName,
                     FirstName = newCustomer.FirstName,
@@ -87,35 +84,36 @@ namespace CustomerProject.Controllers
                 };
                 if (avatar != null)
                 {
-                    cust.ImagePath = avatar.FileName;
+                    dataCust.ImagePath = avatar.FileName;
                 }
                 // Add customer to database
-                Data.Customers.CutomerLibrary.AddCustomer(cust);
+               
 
                 //Add customer avatar to AWS S3 storage
                 if (avatar != null)
                 {
-                    var response = Common.Helpers.AwsAdapter.AwsS3FileUpdload(_bucketName, _folderName, avatar);
+                    var response =await  Common.Helpers.AwsAdapter.AwsS3FileUpdload(_bucketName, _folderName, avatar);
+                    dataCust.ImagePath = _folderName + "/" + avatar.FileName;
                 }
+
+                Data.Customers.CutomerLibrary.AddCustomer(dataCust);
 
                 var result = new List<CustomerProject.Models.Customer>();
                 var customerList = await Data.Customers.CutomerLibrary.GetCustomersFromDBAsync();
                 foreach (var item in customerList)
                 {
-                    Models.Customer customer = new Models.Customer
+                    Models.Customer modelCustomer = new Models.Customer
                     {
                         FirstName = item.FirstName,
                         ID = item.ID,
                         CustomerName = item.CustomerName,
                         Age = item.Age,
-                        ImagePath = item.ImagePath,
-                        IsActive = item.IsActive
-                        //avatar =  Common.Helpers.AwsAdapter.AwsS3FileDownload(_bucketName, _folderName)
+                        ImagePath = _bucketURL + item.ImagePath,
+                        IsActive = item.IsActive                        
                     };
-
-                    result.Add(customer);
+                    //modelCustomer.ImageFullPath = await Common.Helpers.AwsAdapter.AwsS3FileDownload(_bucketName, _folderName, customerList.First().ImagePath);
+                    result.Add(modelCustomer);
                 }
-
                 
                 ViewBag.CustomerList = result;
                 newCustomer = new CustomerProject.Models.Customer();
@@ -125,12 +123,8 @@ namespace CustomerProject.Controllers
             {
                 ViewBag.ErrorMessage = e.ToString();
                 return View("Error");
-            }
-                         
-
+            }                        
         }
-
-
     }
 }
 

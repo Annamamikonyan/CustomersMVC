@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -90,48 +91,57 @@ namespace Common.Helpers
         {
             IAmazonS3 client = new AmazonS3Client(RegionEndpoint.EUCentral1);
 
-            string destPath = "/" + path; // <-- low-level s3 path uses /
+            string destPath =  path + "/" + sourceFile.FileName; // <-- low-level s3 path uses /
             PutObjectRequest request = new PutObjectRequest()
             {
                 InputStream = sourceFile.InputStream,
                 BucketName = bucket,
-                Key = Path.Combine (destPath, sourceFile.FileName)
+                Key = Path.Combine(destPath, sourceFile.FileName),
+                CannedACL = S3CannedACL.PublicRead
+            };  
+            PutObjectResponse response = await  client.PutObjectAsync(request);
+            return response;
+        }       
+
+        private static string GeneratePreSignedURL(string bucketName , string objectKey, double duration, IAmazonS3 s3Client)
+        {
+            var request = new GetPreSignedUrlRequest
+            {
+                BucketName = bucketName,
+                Key = objectKey,
+                Verb = HttpVerb.PUT,
+                Expires = DateTime.UtcNow.AddHours(12)                
             };
 
-            PutObjectResponse response =await  client.PutObjectAsync(request);
-            return response;
+            string url = s3Client.GetPreSignedURL(request);
+            return url;
         }
 
-        public static async  Task<GetObjectResponse> AwsS3FileDownload(string bucket, string path, string fileName )
+        public static async Task<String> AwsS3FileUpdloadWithURL(string bucket, string path, HttpPostedFileBase sourceFile)
         {
             IAmazonS3 client = new AmazonS3Client(RegionEndpoint.EUCentral1);
+            string destPath = path + "/" + sourceFile.FileName;
+            string url = GeneratePreSignedURL(bucket, destPath, 1000, client );
+            await UploadObject(bucket, destPath, sourceFile, url);
+            return url;
+        }
 
-            string destPath = "/" + path; // <-- low-level s3 path uses /
-            GetObjectRequest request = new GetObjectRequest()
+        private static async Task<HttpWebResponse> UploadObject(string bucket, string path, HttpPostedFileBase sourceFile, string preasignedURL)
+        {
+            System.Net.HttpWebRequest httpRequest = WebRequest.Create(preasignedURL) as HttpWebRequest;
+            httpRequest.Method = "PUT";
+            using (Stream dataStream =await httpRequest.GetRequestStreamAsync())
             {
-                // = sourceFile.InputStream,
-                BucketName = bucket,
-                Key = Path.Combine(destPath, "avatar_person1.jpg")
-            };
-           // var file = File.Create();
-            using (GetObjectResponse response = await client.GetObjectAsync(request))
-            {
-                using (StreamReader reader = new StreamReader(response.ResponseStream))
-                {
-                    string contentType = response.Headers["Content-Type"];
-                    string responseBody = reader.ReadToEnd();
-                    // Now you process the response body.
-                    //if (File.Exists(SelectedToDownload.FileName))
-                    //    File.Delete(SelectedToDownload.FileName);
-
-                    //File.WriteAllText(SelectedToDownload.FileName, responseBody);
-                    //string readText = File.ReadAllText(SelectedToDownload.FileName);
-
-
-                }
+                var buffer = new byte[8000];
+               
+                    int bytesRead = 0;
+                    while ((bytesRead = await sourceFile.InputStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                    {
+                        await dataStream.WriteAsync(buffer, 0, bytesRead);
+                    }                
             }
-            
-            return new GetObjectResponse();
+            HttpWebResponse response = httpRequest.GetResponse() as HttpWebResponse;
+            return response;
         }
 
         public static PutObjectResponse AwsS3FileUpdload(string bucket, string partnerName, string path, string content)
@@ -153,11 +163,9 @@ namespace Common.Helpers
             }
             catch ( Exception e)
             {
-
                 throw e;
-            }
-            
-
+            }           
         }
+        
     }
 }
