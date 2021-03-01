@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using System.Data.SqlClient;
 
 namespace Data.Customers
-{ 
-   
-public class CutomerLibrary
+{
+
+    public class CutomerLibrary
     {
-        private static string _connectionString = $"Data Source=JTPC-42\\SQLEXPRESS;Initial Catalog=Test;Integrated Security=True";
+        private static string _connectionString = $"Data Source=DESKTOP-00Q2C43\\SQLEXPRESS;Initial Catalog=Test;Integrated Security=True";
         public static void AddCustomer(Customer customer)
         {
             try
@@ -20,22 +20,22 @@ public class CutomerLibrary
                     con.ConnectionString = _connectionString;
                     con.Open();
                     SqlCommand command = new SqlCommand();
-                    command.CommandType = System.Data.CommandType.Text ;
+                    command.CommandType = System.Data.CommandType.Text;
                     command.CommandText = "insert into CUSTOMERS (CustomerName, FirstName, Age, ImagePath, Active) " +
-                        "Values (@CustomerName, @FirstName, @Age, @ImagPath, @Active)";
-                    command.Parameters.Add("CustomerName", System.Data.SqlDbType.NVarChar, 100).Value = customer.CustomerName;
-                    command.Parameters.Add("FirstName", System.Data.SqlDbType.NVarChar, 50).Value = customer.FirstName ;
-                    command.Parameters.Add("Age", System.Data.SqlDbType.TinyInt ).Value = customer.Age ;
+                        "Values (@CustomerName, @FirstName, @Age, @ImagePath, @Active)";
+                    command.Parameters.Add("@CustomerName", System.Data.SqlDbType.NVarChar, 100).Value = customer.CustomerName;
+                    command.Parameters.Add("@FirstName", System.Data.SqlDbType.NVarChar, 50).Value = customer.FirstName;
+                    command.Parameters.Add("@Age", System.Data.SqlDbType.TinyInt).Value = customer.Age;
                     if (customer.ImagePath == null)
                     {
-                        command.Parameters.Add("ImagPath", System.Data.SqlDbType.NVarChar).Value = DBNull.Value ;
+                        command.Parameters.Add("@ImagePath", System.Data.SqlDbType.NVarChar).Value = DBNull.Value;
                     }
                     else
                     {
-                        command.Parameters.Add("ImagPath", System.Data.SqlDbType.NVarChar).Value = customer.ImagePath;
+                        command.Parameters.Add("@ImagePath", System.Data.SqlDbType.NVarChar).Value = customer.ImagePath;
                     }
-                    
-                    command.Parameters.Add("Active", System.Data.SqlDbType.Bit ).Value = customer.IsActive ;
+
+                    command.Parameters.Add("@Active", System.Data.SqlDbType.Bit).Value = customer.IsActive;
 
                     command.Connection = con;
                     command.ExecuteNonQuery();
@@ -46,10 +46,91 @@ public class CutomerLibrary
 
                 throw e;
             }
-           
+
 
         }
-        public static async  Task<List<Customer>> GetCustomersFromDBAsync()
+
+        public static void EditCustomer(Customer customer)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection())
+                {
+                    con.ConnectionString = _connectionString;
+                    con.Open();
+                    SqlCommand command = new SqlCommand();
+                    command.CommandType = System.Data.CommandType.Text;                    
+                    command.Parameters.Add("@ID", System.Data.SqlDbType.NVarChar, 100).Value = customer.CustomerName;
+
+                    if (!CheckCustomerIDExistance(customer.ID, command))
+                    {
+                        throw new Exception("A Customer with ID does not exist");
+                    }
+
+                    command.Parameters.Add("@CustomerName", System.Data.SqlDbType.NVarChar, 100).Value = customer.CustomerName;
+                    command.Parameters.Add("@FirstName", System.Data.SqlDbType.NVarChar, 50).Value = customer.FirstName;
+                    command.Parameters.Add("@Age", System.Data.SqlDbType.TinyInt).Value = customer.Age;
+                    command.CommandText = "Update CUSTOMERS set CustomerName = @CustomerName,  FirstName = @FirstName, Age = @Age  " +
+                        " Where ID = @ID";
+
+                    //if (customer.ImagePath == null)
+                    //{
+                    //    command.Parameters.Add("ImagePath", System.Data.SqlDbType.NVarChar).Value = DBNull.Value;
+                    //}
+                    //else
+                    //{
+                    //    command.Parameters.Add("ImagePath", System.Data.SqlDbType.NVarChar).Value = customer.ImagePath;
+                    //}
+
+                    //command.Parameters.Add("@Active", System.Data.SqlDbType.Bit).Value = customer.IsActive;
+
+                    command.Connection = con;
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception  e)
+            {
+                throw e;
+            }
+        }
+
+        public static void DeleteCustomer(int ID)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection())
+                {
+                    con.ConnectionString = _connectionString;
+                    con.Open();
+                    SqlCommand command = new SqlCommand();
+                    command.CommandType = System.Data.CommandType.Text;                    
+                    command.Parameters.Add("@ID", System.Data.SqlDbType.NVarChar, 100).Value = ID;
+                    if (!CheckCustomerIDExistance(ID, command))
+                    {
+                        throw new Exception("A Customer with specified ID does not exist");
+                    }
+                    command.CommandText = "Delete from CUSTOMERS Where ID = @ID ";
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        public static bool CheckCustomerIDExistance(int ID,SqlCommand command)
+        {
+            command.CommandText = "Select ID from CUSTOMERS Where ID = @ID";
+            using (var reader = command.ExecuteReader())
+            {
+                if (reader.Read())
+                    return true;
+                else
+                    return false;
+            }
+
+        }
+        public static async Task<List<Customer>> GetCustomersFromDBAsync()
         {
             var result = new List<Customer>();
             try
@@ -91,11 +172,10 @@ public class CutomerLibrary
                     }
                 }
             }
-            catch(SqlException e)
-            { 
+            catch (Exception e)
+            {
+                throw e; ;
             }
-           
-
             return result;
         }
     }
