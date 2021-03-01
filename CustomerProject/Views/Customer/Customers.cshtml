@@ -24,30 +24,37 @@
             $('.edit').click(function () {
                 var row = $(this).closest('tr');
                 var isediting = row.hasClass('isediting');
-                if (isediting) {
+                var i = $(this).parents('tr').children('td[name="ID"]').text();
+                if (isediting) {                   
                     $.ajax({
                         //base address/controller/Action
                         url: '/Customer/EditCustomer',
                         type: 'POST',
                         data: {
-                            ID: $(this).parents('tr').children('td[name="ID"]').val(),
-                            CustomerName: $(this).parents('tr').children('td[name="CustomerName"]').val(),
-                            FirstName: "Arsen",
-                            Age: 44,
+                            ID: $(this).parents('tr').children('td[name="ID"]').text(),
+                            CustomerName: $(this).parents('tr').children('td[name="CustomerName"]').text(),
+                            FirstName: $(this).parents('tr').children('td[name="FirstName"]').text(),
+                            Age: $(this).parents('tr').children('td[name="Age"]').text(),
                             ImagePath: ""
                         },
-                        success: function (msg) {
-                            alert(ms);
+                        success: function (resp) {                          
+                            var r = resp.responseText;
+                            alert(r);
                         },
-                        error: function () {
-                            alert("error");
+                        error: function (resp) {
+                            alert("error" + resp);
                         }
                     });
 
                 }
-                row.toggleClass('isediting'); // add a style to highlight the row
+                row.toggleClass('row')
+                row.toggleClass('isediting'); // add a style to highlight the row                
                 var isediting = row.hasClass('isediting');
-                $(this).parents('tr').children('td').prop('contenteditable', isediting);
+                //$(this).parents('tr').children('td').prop('contenteditable', isediting);
+                $(this).parents('tr').children('td[name="CustomerName"]').prop('contenteditable', isediting);
+                $(this).parents('tr').children('td[name="FirstName"]').prop('contenteditable', isediting);
+                $(this).parents('tr').children('td[name="Age"]').prop('contenteditable', isediting);
+
                 if (isediting) {
                     $(this).prop("value", "Save");
                 } else {
@@ -77,12 +84,14 @@
                 if (confirm("Are you sure you want to delete the record?"))
                 {
                     var id = 7;
+                   contentType: 'application/json',
                     $.ajax({
                         //base address/controller/Action
-                        url: '/Customer/DeleteCustomer/' + id,
-                        type: 'DELETE',                        
-                        success: function (msg) {
-                            alert(ms);
+                        url: '/Customer/DeleteCustomer?Id=' + id,
+                        type: 'GET',     
+                        dataType: "json", contentType: "application/json; charset=utf-8",
+                        success: function () {
+                           
                         },
                         error: function () {
                             alert("error");
@@ -95,9 +104,9 @@
 </head>
 
 <body>
-    <h1 style="font-weight: bold; font-size: 25px ;margin:25px "> Customers </h1>
+    <h1 style="font-weight: bold; font-size: 50px ;margin:25px;color :#4CAF50 "> Customers </h1>
 
-    <p style="font-size: 20px; margin : 20px;">You can add new customer, fill the form bellow</p>
+    <p style="font-size: 30px; margin : 20px ">You can add new customer, fill the form bellow</p>
     <p> </p>
     @using (Html.BeginForm("Customers", "Customer", FormMethod.Post, new { @class = "form", enctype = "multipart/form-data" }))
     {
@@ -136,7 +145,7 @@
     <input type="submit" id="Refresh" value="Refresh" onclick="func()" class="button" />
     <p></p>
     <div>
-        <table border="1" id="CustomerData" style="margin :15px">
+        <table border="1" id="CustomerData" class ="customers" >
             <tr>
                 <th>ID</th>
                 <th>Customer name</th>
@@ -149,7 +158,7 @@
             </tr>
             @foreach (var customer in ViewBag.CustomerList)
             {
-                <tr>
+                <tr class="row">
                     <td name="ID">@customer.ID </td>
                     <td name="CustomerName">@customer.CustomerName</td>
                     <td name="FirstName">@customer.FirstName</td>
@@ -160,7 +169,7 @@
                     <td>
                         <div class="formgroup">
                             <div class="formgroup"><input type="button" class="edit" name="EditButton" value="Edit" /></div>
-                            <div class="formgroup"><input type="button" class="cancel" name="CalcelButton" value="Calcel" class="delete"></div>
+                            <div class="formgroup"><input type="button" class="cancel" name="CalcelButton" value="Calcel"></div>
                             <div class="formgroup"><input type="button" class="delete" name="DeleteButton" value="Delete"></div>
                         </div>
                     </td>

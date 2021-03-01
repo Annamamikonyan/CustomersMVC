@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
+using System.Net;
+using System.Net.Http;
 using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
@@ -127,74 +129,67 @@ namespace CustomerProject.Controllers
         }
 
         [HttpPost]
-        public async Task<ViewResult> EditCustomer(Models.Customer customer)
+        public HttpResponseMessage EditCustomer(Models.Customer customer)
         {
             try
             {
-                Data.Customers.Customer dataCust = new Data.Customers.Customer()
+                if (ModelState.IsValid)
                 {
-                    ID = customer.ID ,
-                    CustomerName = customer.CustomerName,
-                    FirstName = customer.FirstName,
-                    Age = customer.Age,
-                    IsActive = customer.IsActive,
-                };
-                //if (avatar != null)
-                //{
-                //    dataCust.ImagePath = avatar.FileName;
-                //}
-                // Add customer to database
-
-
-                //Add customer avatar to AWS S3 storage
-                //if (avatar != null)
-                //{
-                //    var response = await Common.Helpers.AwsAdapter.AwsS3FileUpdload(_bucketName, _folderName, avatar);
-                //    dataCust.ImagePath = _folderName + "/" + avatar.FileName;
-                //}
-
-                Data.Customers.CutomerLibrary.EditCustomer(dataCust);
-
-                var result = new List<CustomerProject.Models.Customer>();
-                var customerList = await Data.Customers.CutomerLibrary.GetCustomersFromDBAsync();
-                foreach (var item in customerList)
-                {
-                    Models.Customer modelCustomer = new Models.Customer
+                    Data.Customers.Customer dataCust = new Data.Customers.Customer()
                     {
-                        FirstName = item.FirstName,
-                        ID = item.ID,
-                        CustomerName = item.CustomerName,
-                        Age = item.Age,
-                        ImagePath = _bucketURL + item.ImagePath,
-                        IsActive = item.IsActive
+                        ID = customer.ID,
+                        CustomerName = customer.CustomerName,
+                        FirstName = customer.FirstName,
+                        Age = customer.Age,
+                        IsActive = customer.IsActive
                     };
-                    //modelCustomer.ImageFullPath = await Common.Helpers.AwsAdapter.AwsS3FileDownload(_bucketName, _folderName, customerList.First().ImagePath);
-                    result.Add(modelCustomer);
+                    //if (avatar != null)
+                    //{
+                    //    dataCust.ImagePath = avatar.FileName;
+                    //}
+                    // Add customer to database
+
+
+                    //Add customer avatar to AWS S3 storage
+                    //if (avatar != null)
+                    //{
+                    //    var response = await Common.Helpers.AwsAdapter.AwsS3FileUpdload(_bucketName, _folderName, avatar);
+                    //    dataCust.ImagePath = _folderName + "/" + avatar.FileName;
+                    //}
+
+                    Data.Customers.CutomerLibrary.EditCustomer(dataCust);
+                    return new HttpResponseMessage(HttpStatusCode.OK);
+
+                }
+                else
+                {
+                    return new HttpResponseMessage(HttpStatusCode.BadRequest)
+                    { Content =new StringContent("Input data is not valid ")};
                 }
 
-                ViewBag.CustomerList = result;
-                customer = new CustomerProject.Models.Customer();
-                return View(customer );
+               
             }
             catch (Exception e)
             {
-                ViewBag.ErrorMessage = e.ToString();
-                return View("Error");
+                return new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content =  new StringContent(e.Message)
+                };
             }
         }
 
         [HttpDelete]
-        public async Task<ViewResult> DeleteCustomer(int id)
+        public ViewResult DeleteCustomer(int Id)
         {
             try
             {
-                if (id!=0)
+                if (Id != 0)
                 { 
-                    Data.Customers.CutomerLibrary.DeleteCustomer(id); 
+                    Data.Customers.CutomerLibrary.DeleteCustomer(Id); 
                 }
                 
                 var result = new List<CustomerProject.Models.Customer>();
-                var customerList = await Data.Customers.CutomerLibrary.GetCustomersFromDBAsync();
+                var customerList = Data.Customers.CutomerLibrary.GetCustomersFromDBAsync().Result;
                 foreach (var item in customerList)
                 {
                     Models.Customer modelCustomer = new Models.Customer

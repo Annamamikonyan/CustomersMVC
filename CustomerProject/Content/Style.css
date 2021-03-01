@@ -25,7 +25,6 @@
     display: none;
 }
 
-
 .textbox {
     font-family: verdana, arial, snas-serif;
     font-size: 20px;     
@@ -37,10 +36,10 @@
     float: left ;
 }
 
-    .textbox:focus, input.input_text_focus {
-        border-color: #646464;
-        background-color: #fdfec1
-    }
+.textbox:focus, input.input_text_focus {
+    border-color: #646464;
+    background-color: lightyellow
+}
 
 .label {
     font-family: verdana, arial, snas-serif;
@@ -87,21 +86,26 @@
 .customers {
     font-family: Arial, Helvetica, sans-serif;
     border-collapse: collapse;
-    width: 60%;
-    border: 1px solid #ddd;
+    width: 60%;    border: 1px solid #ddd;
 
 }
-/*
+/**/
     .customers td, .customers th {
         border: 1px solid #ddd;
         padding: 8px;
     }
 
-    .customers tr:nth-child(even) {
+   /* .customers tr:nth-child(odd) {
         background-color: #f2f2f2;
-    }
+    }*/
 
-    .customers tr:hover {
+/*.row {
+    border: 1px solid #ddd;
+    padding: 8px;
+}*/
+    
+
+    /*.customers tr:hover {
         background-color: #ddd;
     }
 

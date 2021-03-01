@@ -10,7 +10,7 @@ namespace Data.Customers
 
     public class CutomerLibrary
     {
-        private static string _connectionString = $"Data Source=DESKTOP-00Q2C43\\SQLEXPRESS;Initial Catalog=Test;Integrated Security=True";
+        private static string _connectionString = $"Data Source=(local)\\SQLEXPRESS;Initial Catalog=Test;Integrated Security=True";
         public static void AddCustomer(Customer customer)
         {
             try
@@ -59,8 +59,9 @@ namespace Data.Customers
                     con.ConnectionString = _connectionString;
                     con.Open();
                     SqlCommand command = new SqlCommand();
-                    command.CommandType = System.Data.CommandType.Text;                    
-                    command.Parameters.Add("@ID", System.Data.SqlDbType.NVarChar, 100).Value = customer.CustomerName;
+                    command.CommandType = System.Data.CommandType.Text;
+                    command.Connection = con;
+                    command.Parameters.Add("@ID", System.Data.SqlDbType.Int ).Value = customer.ID ;
 
                     if (!CheckCustomerIDExistance(customer.ID, command))
                     {
@@ -103,8 +104,9 @@ namespace Data.Customers
                     con.ConnectionString = _connectionString;
                     con.Open();
                     SqlCommand command = new SqlCommand();
-                    command.CommandType = System.Data.CommandType.Text;                    
-                    command.Parameters.Add("@ID", System.Data.SqlDbType.NVarChar, 100).Value = ID;
+                    command.CommandType = System.Data.CommandType.Text;
+                    command.Connection = con;
+                    command.Parameters.Add("@ID", System.Data.SqlDbType.Int ).Value = ID;
                     if (!CheckCustomerIDExistance(ID, command))
                     {
                         throw new Exception("A Customer with specified ID does not exist");

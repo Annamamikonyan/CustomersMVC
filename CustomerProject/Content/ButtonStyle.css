@@ -2,18 +2,19 @@
     font-size: 20px;
     font-weight: bold;
     font-family: Arial;
-    color: #0026ff;
-    width :auto ;
-    height: auto ;
-    margin :10px;
+    background-color: #4CAF50;
+    border: #ffffff;
+    color: #ffffff;
+    width: auto;
+    height: auto;
+    margin: 10px;
 }
 
     .button:hover {
         font-size: 20px;
         font-weight: bold;
         font-family: Arial;
-        color: #ff0000;
-        height: auto ;
-        
+        color: lightyellow ;       
+        height: auto;
     }
     
