@@ -77,49 +77,57 @@ namespace CustomerProject.Controllers
         {
             try
             {
-                Data.Customers.Customer dataCust = new Data.Customers.Customer()
+                if (ModelState.IsValid)
                 {
-                    CustomerName = newCustomer.CustomerName,
-                    FirstName = newCustomer.FirstName,
-                    Age = newCustomer.Age,
-                    IsActive = newCustomer.IsActive,
-                };
-                if (avatar != null)
-                {
-                    dataCust.ImagePath = avatar.FileName;
-                }
-                // Add customer to database
-               
-
-                //Add customer avatar to AWS S3 storage
-                if (avatar != null)
-                {
-                    var response =await  Common.Helpers.AwsAdapter.AwsS3FileUpdload(_bucketName, _folderName, avatar);
-                    dataCust.ImagePath = _folderName + "/" + avatar.FileName;
-                }
-
-                Data.Customers.CutomerLibrary.AddCustomer(dataCust);
-
-                var result = new List<CustomerProject.Models.Customer>();
-                var customerList = await Data.Customers.CutomerLibrary.GetCustomersFromDBAsync();
-                foreach (var item in customerList)
-                {
-                    Models.Customer modelCustomer = new Models.Customer
+                    Data.Customers.Customer dataCust = new Data.Customers.Customer()
                     {
-                        FirstName = item.FirstName,
-                        ID = item.ID,
-                        CustomerName = item.CustomerName,
-                        Age = item.Age,
-                        ImagePath = _bucketURL + item.ImagePath,
-                        IsActive = item.IsActive                        
+                        CustomerName = newCustomer.CustomerName,
+                        FirstName = newCustomer.FirstName,
+                        Age = newCustomer.Age,
+                        IsActive = newCustomer.IsActive,
                     };
-                    //modelCustomer.ImageFullPath = await Common.Helpers.AwsAdapter.AwsS3FileDownload(_bucketName, _folderName, customerList.First().ImagePath);
-                    result.Add(modelCustomer);
+                    if (avatar != null)
+                    {
+                        dataCust.ImagePath = avatar.FileName;
+                    }
+                    // Add customer to database
+
+
+                    //Add customer avatar to AWS S3 storage
+                    if (avatar != null)
+                    {
+                        var response = await Common.Helpers.AwsAdapter.AwsS3FileUpdload(_bucketName, _folderName, avatar);
+                        dataCust.ImagePath = _folderName + "/" + avatar.FileName;
+                    }
+
+                    Data.Customers.CutomerLibrary.AddCustomer(dataCust);
+
+                    var result = new List<CustomerProject.Models.Customer>();
+                    var customerList = await Data.Customers.CutomerLibrary.GetCustomersFromDBAsync();
+                    foreach (var item in customerList)
+                    {
+                        Models.Customer modelCustomer = new Models.Customer
+                        {
+                            FirstName = item.FirstName,
+                            ID = item.ID,
+                            CustomerName = item.CustomerName,
+                            Age = item.Age,
+                            ImagePath = _bucketURL + item.ImagePath,
+                            IsActive = item.IsActive
+                        };
+                        //modelCustomer.ImageFullPath = await Common.Helpers.AwsAdapter.AwsS3FileDownload(_bucketName, _folderName, customerList.First().ImagePath);
+                        result.Add(modelCustomer);
+                    }
+
+                    ViewBag.CustomerList = result;
+                    newCustomer = new CustomerProject.Models.Customer();
+                    return View(newCustomer);
+                }
+                else
+                {
+                    return View(newCustomer);
                 }
                 
-                ViewBag.CustomerList = result;
-                newCustomer = new CustomerProject.Models.Customer();
-                return View(newCustomer);
             }
             catch (Exception e)
             {
@@ -178,7 +186,7 @@ namespace CustomerProject.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpPost]
         public ViewResult DeleteCustomer(int Id)
         {
             try
@@ -211,7 +219,8 @@ namespace CustomerProject.Controllers
             }
             catch (Exception e)
             {
-                ViewBag.ErrorMessage = e.ToString();
+                //ViewBag.ErrorMessage = e.ToString();
+                throw e;
                 return View("Error");
             }
         }
