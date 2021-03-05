@@ -45,6 +45,34 @@ namespace CustomerProject.Controllers
         }
 
         [HttpGet]
+        public async Task<ViewResult> GetSingleCustomer(int ID)
+        {
+            //var result1 = Data.Customers.CustomerWIthSqlDataAdapter.GetCustomersFromDBAsync1();
+            var result = new Models.Customer();
+            var list = new List<Models.Customer>();
+
+            var customerList = await Data.Customers.CutomerLibrary.GetCustomersFromDBAsync();
+            foreach (var item in customerList)
+            {
+                Models.Customer customer = new Models.Customer
+                {
+                    FirstName = item.FirstName,
+                    ID = item.ID,
+                    CustomerName = item.CustomerName,
+                    Age = item.Age,
+                    ImagePath = item.ImagePath,
+                    IsActive = item.IsActive
+                };
+
+                list.Add(customer);
+            }
+            result = list.Where(x => x.ID == 1073).First();
+
+           // ViewBag.CustomerList = result;
+            return View("SingleCustomers", result);
+        }
+
+        [HttpGet]
         public async Task<ActionResult> MasterDetailsAjaxHandler()      
         {
             var result = new List<CustomerProject.Models.Customer>();

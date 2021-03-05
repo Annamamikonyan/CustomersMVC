@@ -54,6 +54,7 @@
                 $(this).parents('tr').children('td[name="CustomerName"]').prop('contenteditable', isediting);
                 $(this).parents('tr').children('td[name="FirstName"]').prop('contenteditable', isediting);
                 $(this).parents('tr').children('td[name="Age"]').prop('contenteditable', isediting);
+                $(this).parents('tr').children('input[name="Isactive"]').children('input[name="checkbox"]').prop('disabled', isediting);                
 
                 if (isediting) {
                     $(this).prop("value", "Save");
@@ -146,7 +147,7 @@
     <input type="submit" id="Refresh" value="Refresh" onclick="func()" class="button" />
     <p></p>
     <div>
-        <table border="1" id="CustomerData" class ="customers" >
+        <table border="1" id="CustomerData" class="customers">
             <tr>
                 <th>ID</th>
                 <th>Customer name</th>
@@ -158,15 +159,15 @@
                 <th>Actions</th>
             </tr>
             @foreach (var customer in ViewBag.CustomerList)
-            {
+            {                
                 <tr class="row">
                     <td name="ID">@customer.ID </td>
                     <td name="CustomerName">@customer.CustomerName</td>
                     <td name="FirstName">@customer.FirstName</td>
                     <td name="Age">@customer.Age </td>
-                    <td name="Isactive">@customer.IsActive</td>
+                    <td name="Isactive"><input disabled="disabled" name="checkbox" type="checkbox" checked = @customer.IsActive /></td>
                     <td name="ImagePath">@customer.ImagePath</td>
-                    <td><img src=@customer.ImagePath /></td>
+                    <td><img src=@customer.ImagePath /> </td>
                     <td>
                         <div class="formgroup">
                             <div class="formgroup"><input type="button" class="edit" name="EditButton" value="Edit" /></div>
@@ -174,8 +175,7 @@
                             <div class="formgroup"><input type="button" class="delete" name="DeleteButton" value="Delete"></div>
                         </div>
                     </td>
-                </tr>
-
+                </tr>                
             }
 
         </table>

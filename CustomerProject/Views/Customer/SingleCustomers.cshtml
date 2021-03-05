@@ -1,0 +1,11 @@
+﻿@model CustomerProject.Models.Customer
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/View.cshtml";
+}
+<h2>Customer</h2>
+<div><label>ID:</label>@Html.DisplayFor(m => m.ID )</div>
+<div><label>First Name:</label>@Html.DisplayFor(m => m.FirstName)</div>
+<div><label>Last Name:</label>@Html.DisplayFor(m => m.CustomerName )</div>
+<div><label>Active:</label>@Html.DisplayFor(m => m.IsActive)</div>

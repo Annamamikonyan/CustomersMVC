@@ -11,8 +11,11 @@
     </head>
     <body>
         <h1 style="font-weight: bold; font-size: large ; "> Hello from application, if you want to get info, follow the link  </h1>
-        <div>    
-            @Html.ActionLink("GetCustomers" ,"Customers", "Customer") 
+        <div>
+            @Html.ActionLink("GetCustomers", "Customers", "Customer")
+        </div>
+        <div>
+            @Html.ActionLink("Get a single Customer", "GetSingleCustomer/100", "Customer")
         </div>
     </body>
 </html>
