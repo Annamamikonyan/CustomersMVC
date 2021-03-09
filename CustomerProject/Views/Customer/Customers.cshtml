@@ -15,9 +15,17 @@
     </script>
     @* <script src="jquery-3.5.1.min.js"></script>*@
     <script type="text/javascript">
-        function func() {
-            alert("hello");
-        }
+        $(document).ready(function () {   
+            $("tr.row").each(function () {
+                var val = $(this).find('input').prop("value");               
+                if (val==="True") {
+                    $(this).children('input[name="checkbox"]').prop('checked', "checked") ;
+                } else { 
+                    $(this).children('input[name="checkbox"]').prop('checked', "false");
+                }
+            });           
+        });
+
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -25,7 +33,7 @@
                 var row = $(this).closest('tr');
                 var isediting = row.hasClass('isediting');
                 var i = $(this).parents('tr').children('td[name="ID"]').text();
-                if (isediting) {                   
+                if (isediting) {
                     $.ajax({
                         //base address/controller/Action
                         url: '/Customer/EditCustomer',
@@ -35,9 +43,10 @@
                             CustomerName: $(this).parents('tr').children('td[name="CustomerName"]').text(),
                             FirstName: $(this).parents('tr').children('td[name="FirstName"]').text(),
                             Age: $(this).parents('tr').children('td[name="Age"]').text(),
+                            IsActive: $(this).parents('tr').children('td[name="Isactive"]').children('input[name="checkbox"]').checked,
                             ImagePath: ""
                         },
-                        success: function (resp) {                          
+                        success: function (resp) {
                             var r = resp.responseText;
                             alert(r);
                         },
@@ -48,13 +57,13 @@
 
                 }
                 row.toggleClass('row')
-                row.toggleClass('isediting'); // add a style to highlight the row                
+                row.toggleClass('isediting'); // add a style to highlight the row
                 var isediting = row.hasClass('isediting');
                 //$(this).parents('tr').children('td').prop('contenteditable', isediting);
                 $(this).parents('tr').children('td[name="CustomerName"]').prop('contenteditable', isediting);
                 $(this).parents('tr').children('td[name="FirstName"]').prop('contenteditable', isediting);
                 $(this).parents('tr').children('td[name="Age"]').prop('contenteditable', isediting);
-                $(this).parents('tr').children('input[name="Isactive"]').children('input[name="checkbox"]').prop('disabled', isediting);                
+                $(this).parents('tr').children('td[name="Isactive"]').children('input[name="checkbox"]').prop('disabled', !isediting);
 
                 if (isediting) {
                     $(this).prop("value", "Save");
@@ -82,22 +91,21 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('.delete').click(function () {
-                if (confirm("Are you sure you want to delete the record?"))
-                {
+                if (confirm("Are you sure you want to delete the record?")) {
                     var id = 7;
-                   contentType: 'application/json',
-                    $.ajax({
-                        //base address/controller/Action
-                        url: '/Customer/DeleteCustomer/' + id,
-                        type: 'POST',     
-                        dataType: "json", contentType: "application/json; charset=utf-8",
-                        success: function (xhr, httpStatusMessage, customErrorMessage) {
-                            alert("resp.");
-                        },
-                        error: function (xhr, httpStatusMessage, customErrorMessage) {
-                            if (xhr.status === 410) { alert(customErrorMessage); }
-                        }
-                    });
+                    contentType: 'application/json',
+                        $.ajax({
+                            //base address/controller/Action
+                            url: '/Customer/DeleteCustomer/' + id,
+                            type: 'POST',
+                            dataType: "json", contentType: "application/json; charset=utf-8",
+                            success: function (xhr, httpStatusMessage, customErrorMessage) {
+                                alert("resp.");
+                            },
+                            error: function (xhr, httpStatusMessage, customErrorMessage) {
+                                if (xhr.status === 410) { alert(customErrorMessage); }
+                            }
+                        });
                 }
             });
         });
@@ -131,7 +139,7 @@
             <div class="row">
                 <div class=" col-25 "><label class="label">Is Active : </label></div>
                 <div class=" col-75">
-                    @Html.CheckBoxFor(x => x.IsActive, new { @class = "textbox" })
+                    @Html.CheckBoxFor(x => x.IsActive, new { @class = "checkbox" , Value = @Model.IsActive  })
                 </div>
             </div>
             <div class="row">
@@ -165,7 +173,7 @@
                     <td name="CustomerName">@customer.CustomerName</td>
                     <td name="FirstName">@customer.FirstName</td>
                     <td name="Age">@customer.Age </td>
-                    <td name="Isactive"><input disabled="disabled" name="checkbox" type="checkbox" checked = @customer.IsActive /></td>
+                    <td name="Isactive"><input type="checkbox" disabled="disabled" name="checkbox"  value ="@customer.IsActive" /></td>
                     <td name="ImagePath">@customer.ImagePath</td>
                     <td><img src=@customer.ImagePath /> </td>
                     <td>

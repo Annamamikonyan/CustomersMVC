@@ -71,35 +71,7 @@ namespace CustomerProject.Controllers
            // ViewBag.CustomerList = result;
             return View("SingleCustomers", result);
         }
-
-        [HttpGet]
-        public async Task<ActionResult> MasterDetailsAjaxHandler()      
-        {
-            var result = new List<CustomerProject.Models.Customer>();
-
-            var customerList = await Data.Customers.CutomerLibrary.GetCustomersFromDBAsync();
-           
-            foreach (var item in customerList)
-            {
-                Models.Customer customer = new Models.Customer
-                {
-                    FirstName = item.FirstName,
-                    ID = item.ID,
-                    CustomerName = item.CustomerName,
-                    Age = item.Age,
-                    ImagePath = _bucketURL + item.ImagePath,
-                    IsActive = item.IsActive
-                };
-
-                result.Add(customer);
-            }         
-
-            return Json(new
-            {               
-                aaData = result
-            }, JsonRequestBehavior.AllowGet);
-        }
-
+      
         [HttpPost]
         public  async Task<ViewResult> Customers(Models.Customer newCustomer, HttpPostedFileBase avatar)
         {
