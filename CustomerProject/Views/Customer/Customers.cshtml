@@ -64,12 +64,14 @@
                 $(this).parents('tr').children('td[name="FirstName"]').prop('contenteditable', isediting);
                 $(this).parents('tr').children('td[name="Age"]').prop('contenteditable', isediting);
                 $(this).parents('tr').children('td[name="Isactive"]').children('input[name="checkbox"]').prop('disabled', !isediting);
+                
 
                 if (isediting) {
                     $(this).prop("value", "Save");
+                    $(this).parent('div').parent('div').find('input[name="cancel"]').prop('hidden', "true" );
                 } else {
                     $(this).prop("value", "Edit");
-
+                    $(this).parent('div').parent('div').find('input[name="cancel"]').prop('hidden', "false");
                 }
             });
         });
@@ -179,7 +181,7 @@
                     <td>
                         <div class="formgroup">
                             <div class="formgroup"><input type="button" class="edit" name="EditButton" value="Edit" /></div>
-                            <div class="formgroup"><input type="button" class="cancel" name="CalcelButton" value="Calcel"></div>
+                            <div class="formgroup"><input type="button" class="cancel" name="CalcelButton" value="Calcel" hidden ="hidden" ></div>
                             <div class="formgroup"><input type="button" class="delete" name="DeleteButton" value="Delete"></div>
                         </div>
                     </td>
