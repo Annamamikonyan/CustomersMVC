@@ -3,6 +3,7 @@
 @{
     Layout = null;
 }
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,7 +14,7 @@
     <script type="text/javascript"
             src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js">
     </script>
-    @* <script src="jquery-3.5.1.min.js"></script>*@
+    
     <script type="text/javascript">
         $(document).ready(function () {   
             $("tr.row").each(function () {
@@ -33,6 +34,12 @@
                 var row = $(this).closest('tr');
                 var isediting = row.hasClass('isediting');
                 var i = $(this).parents('tr').children('td[name="ID"]').text();
+
+                var oldValueCustomerName = $(this).parents('tr').children('td[name="CustomerName"]').text();
+                var oldValueFirstName = $(this).parents('tr').children('td[name="FirstName"]').text();
+                var oldValueAge = $(this).parents('tr').children('td[name="Age"]').text();
+                var oldValueIsActive= $(this).parents('tr').children('td[name="Isactive"]').children('input[name="checkbox"]').checked;
+
                 if (isediting) {
                     $.ajax({
                         //base address/controller/Action
@@ -46,12 +53,15 @@
                             IsActive: $(this).parents('tr').children('td[name="Isactive"]').children('input[name="checkbox"]').checked,
                             ImagePath: ""
                         },
-                        success: function (resp) {
-                            var r = resp.responseText;
-                            alert(r);
+                        success: function (resp, status, xhr) {                          
+                            $(document).find('p[name="Error"]')[0].innerHTML = resp;
                         },
                         error: function (resp) {
-                            alert("error" + resp);
+                          $(this).parents('tr').children('td[name="CustomerName"]').text=oldValueCustomerName;
+                          $(this).parents('tr').children('td[name="FirstName"]').text=oldValueFirstName
+                          $(this).parents('tr').children('td[name="Age"]').text=oldValueAge;
+                          $(this).parents('tr').children('td[name="Isactive"]').children('input[name="checkbox"]').prop("checked", oldValueIsActive);
+                          $(document).find('p[name="Error"]')[0].innerHTML = resp;
                         }
                     });
 
@@ -63,8 +73,7 @@
                 $(this).parents('tr').children('td[name="CustomerName"]').prop('contenteditable', isediting);
                 $(this).parents('tr').children('td[name="FirstName"]').prop('contenteditable', isediting);
                 $(this).parents('tr').children('td[name="Age"]').prop('contenteditable', isediting);
-                $(this).parents('tr').children('td[name="Isactive"]').children('input[name="checkbox"]').prop('disabled', !isediting);
-                
+                $(this).parents('tr').children('td[name="Isactive"]').children('input[name="checkbox"]').prop('disabled', !isediting);                
 
                 if (isediting) {
                     $(this).prop("value", "Save");
@@ -118,7 +127,7 @@
     <h1 style="font-weight: bold; font-size: 50px ;margin:25px;color :#4CAF50 "> Customers </h1>
 
     <p style="font-size: 30px; margin : 20px ">You can add new customer, fill the form bellow</p>
-    <p> </p>
+    <p > </p>
     @using (Html.BeginForm("Customers", "Customer", FormMethod.Post, new { @class = "form", enctype = "multipart/form-data" }))
     {
         @Html.ValidationSummary()
@@ -130,7 +139,7 @@
             <div class="row">
                 <div class=" col-25 "> <label class="label">FirstName : </label> </div>
                 <div class=" col-75 ">@Html.TextBoxFor(x => x.FirstName, new { @class = "textbox", Value = @Model.FirstName })</div>
-            </div>   
+            </div>
 
             <div class="row">
                 <div class=" col-25 "><label class="label">Age       : </label> </div>
@@ -141,7 +150,7 @@
             <div class="row">
                 <div class=" col-25 "><label class="label">Is Active : </label></div>
                 <div class=" col-75">
-                    @Html.CheckBoxFor(x => x.IsActive, new { @class = "checkbox" , Value = @Model.IsActive  })
+                    @Html.CheckBoxFor(x => x.IsActive, new { @class = "checkbox", Value = @Model.IsActive })
                 </div>
             </div>
             <div class="row">
@@ -156,6 +165,7 @@
     <p></p>
     <input type="submit" id="Refresh" value="Refresh" onclick="func()" class="button" />
     <p></p>
+    <p name="Error" style="font-size: 30px; margin : 20px ; color : red "> </p>
     <div>
         <table border="1" id="CustomerData" class="customers">
             <tr>
@@ -169,23 +179,24 @@
                 <th>Actions</th>
             </tr>
             @foreach (var customer in ViewBag.CustomerList)
-            {                
+            {
                 <tr class="row">
                     <td name="ID">@customer.ID </td>
                     <td name="CustomerName">@customer.CustomerName</td>
                     <td name="FirstName">@customer.FirstName</td>
                     <td name="Age">@customer.Age </td>
-                    <td name="Isactive"><input type="checkbox" disabled="disabled" name="checkbox"  value ="@customer.IsActive" /></td>
+                    <td name="Isactive"><input type="checkbox" disabled="disabled" name="checkbox" value="@customer.IsActive" /></td>
                     <td name="ImagePath">@customer.ImagePath</td>
                     <td><img src=@customer.ImagePath /> </td>
                     <td>
                         <div class="formgroup">
                             <div class="formgroup"><input type="button" class="edit" name="EditButton" value="Edit" /></div>
-                            <div class="formgroup"><input type="button" class="cancel" name="CalcelButton" value="Calcel" hidden ="hidden" ></div>
+                            <div class="formgroup"><input type="button" class="cancel" name="CalcelButton" value="Calcel" hidden="hidden"></div>
                             <div class="formgroup"><input type="button" class="delete" name="DeleteButton" value="Delete"></div>
                         </div>
                     </td>
-                </tr>                
+                </tr>
+
             }
 
         </table>

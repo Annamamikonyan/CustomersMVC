@@ -137,7 +137,7 @@ namespace CustomerProject.Controllers
         }
 
         [HttpPost]
-        public HttpResponseMessage EditCustomer(Models.Customer customer)
+        public async Task<ViewResult> EditCustomer(Models.Customer customer)
         {
             try
             {
@@ -165,35 +165,40 @@ namespace CustomerProject.Controllers
                     //    dataCust.ImagePath = _folderName + "/" + avatar.FileName;
                     //}
 
-                    Data.Customers.CutomerLibrary.EditCustomer(dataCust);
-                    return new HttpResponseMessage(HttpStatusCode.OK);
-
+                   await  Data.Customers.CutomerLibrary.EditCustomerAsync(dataCust);
+                    ViewBag.ErrorMessage = "Customer data was updated successfully";
+                    return View("Error");
+                    //return new HttpResponseMessage(HttpStatusCode.OK)
+                    //{ Content = new StringContent("Customer data was updated successfully. ") };               
                 }
                 else
                 {
-                    return new HttpResponseMessage(HttpStatusCode.BadRequest)
-                    { Content =new StringContent("Input data is not valid ")};
-                }
-
-               
+                    ViewBag.ErrorMessage = "Customer data was not found";
+                    return View("Error");
+                    //return new HttpResponseMessage(HttpStatusCode.OK)
+                    //{ Content =new StringContent("Input data is not valid ")};
+                }               
             }
             catch (Exception e)
             {
-                return new HttpResponseMessage(HttpStatusCode.BadRequest)
-                {
-                    Content =  new StringContent(e.Message)
-                };
+                ViewBag.ErrorMessage = "Error occured";
+                
+                return View("Error");
+                //return new HttpResponseMessage(HttpStatusCode.BadRequest)
+                //{
+                //    Content =  new StringContent(e.Message)
+                //};
             }
         }
 
         [HttpPost]
-        public ViewResult DeleteCustomer(int Id)
+        public async Task<ViewResult> DeleteCustomer(int Id)
         {
             try
             {
                 if (Id != 0)
                 { 
-                    Data.Customers.CutomerLibrary.DeleteCustomer(Id); 
+                   await  Data.Customers.CutomerLibrary.DeleteCustomerAsync(Id); 
                 }
                 
                 var result = new List<CustomerProject.Models.Customer>();
