@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AWSXRayRecorder.Handlers.System.Net</name>
+    </assembly>
+    <members>
+        <member name="T:Amazon.XRay.Recorder.Handlers.System.Net.HttpClientXRayTracingHandler">
+            <summary>
+            Wrapper around <see cref="T:System.Net.Http.HttpClientHandler"/> for AWS X-Ray tracing of HTTP requests
+            </summary>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.System.Net.HttpClientXRayTracingHandler.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+            <summary>
+            Wrapper of <see cref="M:System.Net.Http.HttpClientHandler.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)"/> method.
+            It collects information from request and response. Also, a trace header will be injected 
+            into the HttpWebRequest to propagate the tracing to downstream web service. 
+            </summary>
+            <param name="request">An instance of <see cref="T:System.Net.Http.HttpResponseMessage"/></param>
+            <param name="cancellationToken">An instance of <see cref="T:System.Threading.CancellationToken"/></param>
+            <returns>A Task of <see cref="T:System.Net.Http.HttpResponseMessage"/> representing the asynchronous operation</returns>
+        </member>
+        <member name="T:Amazon.XRay.Recorder.Handlers.System.Net.HttpWebRequestTracingExtension">
+            <summary>
+            Tracing extension methods of <see cref="T:System.Net.HttpWebRequest"/> class. 
+            </summary>
+            <see cref="T:System.Net.HttpWebRequest"/>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.System.Net.HttpWebRequestTracingExtension.GetResponseTraced(System.Net.WebRequest)">
+            <summary>
+            Wrapper of <see cref="M:System.Net.WebRequest.GetResponse"/> method.
+            It collects information from request and response. Also, a trace header will be injected 
+            into the HttpWebRequest to propagate the tracing to downstream web service. This method is 
+            used for synchronous requests.
+            </summary>
+            <param name="request">An instance of <see cref="T:System.Net.WebRequest"/> which the method extended to</param>
+            <returns>A <see cref="T:System.Net.WebResponse"/> that contains the response from the Internet resource.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.System.Net.HttpWebRequestTracingExtension.GetAsyncResponseTraced(System.Net.WebRequest)">
+            <summary>
+            Wrapper of <see cref="M:System.Net.WebRequest.GetResponseAsync"/> method.
+            It collects information from request and response. Also, a trace header will be injected 
+            into the HttpWebRequest to propagate the tracing to downstream web service. This method is
+            used for asynchronous requests.
+            </summary>
+            <param name="request">An instance of <see cref="T:System.Net.WebRequest"/> which the method extended to</param>
+            <returns>A task of <see cref="T:System.Net.WebResponse"/> that contains the response from the Internet resource.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.System.Net.Utils.RequestUtil.ProcessRequest(System.Net.WebRequest)">
+            <summary>
+            Collects information from and adds a tracing header to the request.
+            </summary>
+            <param name="request">An instance of <see cref="T:System.Net.WebRequest"/></param>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.System.Net.Utils.RequestUtil.ProcessRequest(System.Net.Http.HttpRequestMessage)">
+            <summary>
+            Collects information from and adds a tracing header to the request.
+            </summary>
+            <param name="request">An instance of <see cref="T:System.Net.Http.HttpRequestMessage"/></param>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.System.Net.Utils.RequestUtil.ProcessResponse(System.Net.HttpWebResponse)">
+            <summary>
+            Collects information from the response and adds to <see cref="T:Amazon.XRay.Recorder.Core.AWSXRayRecorder"/> instance.
+            </summary>
+            <param name="request">An instance of <see cref="T:System.Net.HttpWebResponse"/></param>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.System.Net.Utils.RequestUtil.ProcessResponse(System.Net.Http.HttpResponseMessage)">
+            <summary>
+            Collects information from the response and adds to <see cref="T:Amazon.XRay.Recorder.Core.AWSXRayRecorder"/> instance.
+            </summary>
+            <param name="request">An instance of <see cref="T:System.Net.Http.HttpResponseMessage"/></param>
+        </member>
+    </members>
+</doc>

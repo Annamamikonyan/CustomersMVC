@@ -1,0 +1,209 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AWSXRayRecorder.Handlers.EntityFramework</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.EntityFrameworkCore.AWSXRayInterceptorExtensions">
+            <summary>
+            Extension method for <see cref="T:Microsoft.EntityFrameworkCore.DbContextOptionsBuilder"/> to add <see cref="T:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor"/>.
+            User can pass collectSqlQueries to AddXRayInterceptor() to decide if sanitized_query should be included in the trace
+            context or not.
+            </summary>
+        </member>
+        <member name="M:Microsoft.EntityFrameworkCore.AWSXRayInterceptorExtensions.AddXRayInterceptor(Microsoft.EntityFrameworkCore.DbContextOptionsBuilder,System.Nullable{System.Boolean})">
+            <summary>
+            Add <see cref="T:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor"/> to <see cref="T:Microsoft.EntityFrameworkCore.DbContextOptionsBuilder"/>.
+            </summary>
+            <param name="dbContextOptionsBuilder">Instance of <see cref="T:Microsoft.EntityFrameworkCore.DbContextOptionsBuilder"/>.</param>
+            <param name="collectSqlQueries">Set this parameter to true to capture sql query text. The value set here overrides the value of CollectSqlQueries in appsettings.json if present. The default value of this parameter is null.</param>
+            <returns>Instance of <see cref="T:Microsoft.EntityFrameworkCore.DbContextOptionsBuilder"/>.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor.ReaderExecuting(System.Data.Common.DbCommand,Microsoft.EntityFrameworkCore.Diagnostics.CommandEventData,Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult{System.Data.Common.DbDataReader})">
+            <summary>
+            Trace before executing reader.
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <param name="eventData">Instance of <see cref="T:Microsoft.EntityFrameworkCore.Diagnostics.CommandEventData"/>.</param>
+            <param name="result">Result from <see cref="T:Microsoft.EntityFrameworkCore.Diagnostics.IInterceptor"/>.</param>
+            <returns>Result from <see cref="T:Microsoft.EntityFrameworkCore.Diagnostics.IInterceptor"/>.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor.ReaderExecuted(System.Data.Common.DbCommand,Microsoft.EntityFrameworkCore.Diagnostics.CommandExecutedEventData,System.Data.Common.DbDataReader)">
+            <summary>
+            Trace after executing reader.
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <param name="eventData">Instance of <see cref="T:Microsoft.EntityFrameworkCore.Diagnostics.CommandExecutedEventData"/>.</param>
+            <param name="result">Instance of <see cref="T:System.Data.Common.DbDataReader"/>.</param>
+            <returns>Instance of <see cref="T:System.Data.Common.DbDataReader"/>.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor.ReaderExecutingAsync(System.Data.Common.DbCommand,Microsoft.EntityFrameworkCore.Diagnostics.CommandEventData,Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult{System.Data.Common.DbDataReader},System.Threading.CancellationToken)">
+            <summary>
+            Trace before executing reader asynchronously.
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <param name="eventData">Instance of <see cref="T:Microsoft.EntityFrameworkCore.Diagnostics.CommandEventData"/>.</param>
+            <param name="result">Result from <see cref="T:Microsoft.EntityFrameworkCore.Diagnostics.IInterceptor"/>.</param>
+            <param name="cancellationToken">Instance of <see cref="T:System.Threading.CancellationToken"/>.</param>
+            <returns>Task representing the async operation.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor.ReaderExecutedAsync(System.Data.Common.DbCommand,Microsoft.EntityFrameworkCore.Diagnostics.CommandExecutedEventData,System.Data.Common.DbDataReader,System.Threading.CancellationToken)">
+            <summary>
+            Trace after executing reader asynchronously.
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <param name="eventData">Instance of <see cref="T:Microsoft.EntityFrameworkCore.Diagnostics.CommandExecutedEventData"/>.</param>
+            <param name="result">Result from <see cref="T:System.Data.Common.DbDataReader"/>.</param>
+            <param name="cancellationToken">Instance of <see cref="T:System.Threading.CancellationToken"/>.</param>
+            <returns>Task representing the async operation.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor.CommandFailed(System.Data.Common.DbCommand,Microsoft.EntityFrameworkCore.Diagnostics.CommandErrorEventData)">
+            <summary>
+            Trace after command fails.
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <param name="eventData">Instance of <see cref="T:Microsoft.EntityFrameworkCore.Diagnostics.CommandErrorEventData"/>.</param>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor.CommandFailedAsync(System.Data.Common.DbCommand,Microsoft.EntityFrameworkCore.Diagnostics.CommandErrorEventData,System.Threading.CancellationToken)">
+            <summary>
+            Trace after async command fails.
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <param name="eventData">Instance of <see cref="T:Microsoft.EntityFrameworkCore.Diagnostics.CommandErrorEventData"/>.</param>
+            <param name="cancellationToken">Instance of <see cref="T:System.Threading.CancellationToken"/>.</param>
+            <returns>Task representing the async operation.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor.NonQueryExecuting(System.Data.Common.DbCommand,Microsoft.EntityFrameworkCore.Diagnostics.CommandEventData,Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult{System.Int32})">
+            <summary>
+            Trace before excuting.
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <param name="eventData">Instance of <see cref="T:Microsoft.EntityFrameworkCore.Diagnostics.CommandEventData"/>.</param>
+            <param name="result">Result from <see cref="T:Microsoft.EntityFrameworkCore.Diagnostics.IInterceptor"/>.</param>
+            <returns>Task representing the operation.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor.NonQueryExecutingAsync(System.Data.Common.DbCommand,Microsoft.EntityFrameworkCore.Diagnostics.CommandEventData,Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult{System.Int32},System.Threading.CancellationToken)">
+            <summary>
+            Trace before executing asynchronously.
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <param name="eventData">Instance of <see cref="T:Microsoft.EntityFrameworkCore.Diagnostics.CommandEventData"/>.</param>
+            <param name="result">Result from <see cref="T:Microsoft.EntityFrameworkCore.Diagnostics.IInterceptor"/>.</param>
+            <param name="cancellationToken">Instance of <see cref="T:System.Threading.CancellationToken"/>.</param>
+            <returns>Task representing the async operation.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor.NonQueryExecuted(System.Data.Common.DbCommand,Microsoft.EntityFrameworkCore.Diagnostics.CommandExecutedEventData,System.Int32)">
+            <summary>
+            Trace after executing.
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <param name="eventData">Instance of <see cref="T:Microsoft.EntityFrameworkCore.Diagnostics.CommandExecutedEventData"/>.</param>
+            <param name="result">Result as integer.</param>
+            <returns>Result as integer.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor.NonQueryExecutedAsync(System.Data.Common.DbCommand,Microsoft.EntityFrameworkCore.Diagnostics.CommandExecutedEventData,System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Trace after executing asynchronously.
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <param name="eventData">Instance of <see cref="T:Microsoft.EntityFrameworkCore.Diagnostics.CommandExecutedEventData"/>.</param>
+            <param name="result">Result as integer.</param>
+            <param name="cancellationToken">Instance of <see cref="T:System.Threading.CancellationToken"/>.</param>
+            <returns>Task representing the async operation.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor.ScalarExecuting(System.Data.Common.DbCommand,Microsoft.EntityFrameworkCore.Diagnostics.CommandEventData,Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult{System.Object})">
+            <summary>
+            Trace before executing scalar.
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <param name="eventData">Instance of <see cref="T:Microsoft.EntityFrameworkCore.Diagnostics.CommandEventData"/>.</param>
+            <param name="result">Result from <see cref="T:Microsoft.EntityFrameworkCore.Diagnostics.IInterceptor"/>.</param>
+            <returns>Result from <see cref="T:Microsoft.EntityFrameworkCore.Diagnostics.IInterceptor"/>.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor.ScalarExecutingAsync(System.Data.Common.DbCommand,Microsoft.EntityFrameworkCore.Diagnostics.CommandEventData,Microsoft.EntityFrameworkCore.Diagnostics.InterceptionResult{System.Object},System.Threading.CancellationToken)">
+            <summary>
+            Trace before executing scalar asynchronously.
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <param name="eventData">Instance of <see cref="T:Microsoft.EntityFrameworkCore.Diagnostics.CommandEventData"/>.</param>
+            <param name="result">Result from <see cref="T:Microsoft.EntityFrameworkCore.Diagnostics.IInterceptor"/>.</param>
+            <param name="cancellationToken">Instance of <see cref="T:System.Threading.CancellationToken"/>.</param>
+            <returns>Task representing the async operation.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor.ScalarExecuted(System.Data.Common.DbCommand,Microsoft.EntityFrameworkCore.Diagnostics.CommandExecutedEventData,System.Object)">
+            <summary>
+            Trace after executing scalar.
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <param name="eventData">Instance of <see cref="T:Microsoft.EntityFrameworkCore.Diagnostics.CommandExecutedEventData"/>.</param>
+            <param name="result">Result object.</param>
+            <returns>Result object.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor.ScalarExecutedAsync(System.Data.Common.DbCommand,Microsoft.EntityFrameworkCore.Diagnostics.CommandExecutedEventData,System.Object,System.Threading.CancellationToken)">
+            <summary>
+            Trace after executing scalar asynchronously.
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <param name="eventData">Instance of <see cref="T:Microsoft.EntityFrameworkCore.Diagnostics.CommandExecutedEventData"/>.</param>
+            <param name="result">Result object.</param>
+            <param name="cancellationToken">Instance of <see cref="T:System.Threading.CancellationToken"/>.</param>
+            <returns>Task representing the async operation.</returns>
+        </member>
+        <member name="T:Amazon.XRay.Recorder.Handlers.EntityFramework.EFUtil">
+            <summary>
+            Utilities for EFInterceptor
+            </summary>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFUtil.ProcessBeginCommand(System.Data.Common.DbCommand,System.Nullable{System.Boolean})">
+            <summary>
+            Process command to begin subsegment.
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <param name="collectSqlQueriesOverride">Nullable to indicate whether to collect sql query text or not.</param>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFUtil.ProcessEndCommand">
+            <summary>
+            Process to end subsegment
+            </summary>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFUtil.ProcessCommandError(System.Exception)">
+            <summary>
+            Process exception.
+            </summary>
+            <param name="exception">Instance of <see cref="T:System.Exception"/>.</param>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFUtil.BuildSubsegmentName(System.Data.Common.DbCommand)">
+            <summary>
+            Builds the name of the subsegment in the format database@datasource
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <returns>Returns the formed subsegment name as a string.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFUtil.CollectSqlInformation(System.Data.Common.DbCommand,System.Nullable{System.Boolean})">
+            <summary>
+            Records the SQL information on the current subsegment,
+            </summary>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFUtil.GetDataBaseType(System.Data.Common.DbCommand)">
+            <summary>
+            Extract database_type from <see cref="T:System.Data.Common.DbCommand"/>.
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <returns>Type of database.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFUtil.GetUserId(System.Data.Common.DbConnectionStringBuilder)">
+            <summary>
+            Extract user id from <see cref="T:System.Data.Common.DbConnectionStringBuilder"/>.
+            </summary>
+            <param name="builder">Instance of <see cref="T:System.Data.Common.DbConnectionStringBuilder"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFUtil.RemovePortNumberFromDataSource(System.String)">
+            <summary>
+            Removes the port number from data source.
+            </summary>
+            <param name="dataSource">The data source.</param>
+            <returns>The data source string with port number removed.</returns>
+        </member>
+    </members>
+</doc>

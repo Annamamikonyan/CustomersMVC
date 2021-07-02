@@ -6,7 +6,6 @@ C:\Users\mamik\source\repos\CustomerProject\CustomersLib\obj\Debug\CustomersLib.
 C:\Users\mamik\source\repos\CustomerProject\CustomersLib\obj\Debug\CustomersLib.pdb
 C:\Users\anna.mamikonyan\Source\Repos\CustomersMVC\CustomersLib\bin\Debug\CustomersLib.dll
 C:\Users\anna.mamikonyan\Source\Repos\CustomersMVC\CustomersLib\bin\Debug\CustomersLib.pdb
-C:\Users\anna.mamikonyan\Source\Repos\CustomersMVC\CustomersLib\obj\Debug\CustomersLib.csprojAssemblyReference.cache
 C:\Users\anna.mamikonyan\Source\Repos\CustomersMVC\CustomersLib\obj\Debug\CustomersLib.csproj.CoreCompileInputs.cache
 C:\Users\anna.mamikonyan\Source\Repos\CustomersMVC\CustomersLib\obj\Debug\CustomersLib.dll
 C:\Users\anna.mamikonyan\Source\Repos\CustomersMVC\CustomersLib\obj\Debug\CustomersLib.pdb

@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AWSXRayRecorder.Handlers.EntityFramework</name>
+    </assembly>
+    <members>
+        <member name="T:Amazon.XRay.Recorder.Handlers.EntityFramework.AWSXRayEntityFramework6">
+            <summary>
+            Class for <see cref="T:System.Data.Entity.Infrastructure.Interception.DbInterception"/> to add <see cref="T:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor"/>.
+            User can pass collectSqlQueries to AddXRayInterceptor() to decide if sanitized_query should be included in the trace
+            context or not.
+            </summary>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.AWSXRayEntityFramework6.AddXRayInterceptor(System.Nullable{System.Boolean})">
+            <summary>
+            Enable tracing SQL queries through EntityFramework 6 for .NET framework by calling AWSXRayEntityFramework6.AddXRayInterceptor() to add <see cref="T:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor"/> into <see cref="T:System.Data.Entity.Infrastructure.Interception.DbInterception"/> to register X-Ray tracing interceptor.
+            </summary>
+            <param name="collectSqlQueries">Set this parameter to true to capture sql query text. The value set here overrides the value of CollectSqlQueries in Web.config if present. The default value of this parameter is null.</param>
+        </member>
+        <member name="T:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor">
+            <summary>
+            Class to intercept SQL query through EF 6 for .NET framework.
+            </summary>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor.NonQueryExecuting(System.Data.Common.DbCommand,System.Data.Entity.Infrastructure.Interception.DbCommandInterceptionContext{System.Int32})">
+            <summary>
+            Trace before executing non query.
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <param name="interceptionContext">Instance of <see cref="T:System.Data.Entity.Infrastructure.Interception.DbCommandInterceptionContext"/>.</param>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor.NonQueryExecuted(System.Data.Common.DbCommand,System.Data.Entity.Infrastructure.Interception.DbCommandInterceptionContext{System.Int32})">
+            <summary>
+            Trace after executing non query.
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <param name="interceptionContext">Instance of <see cref="T:System.Data.Entity.Infrastructure.Interception.DbCommandInterceptionContext"/>.</param>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor.ReaderExecuting(System.Data.Common.DbCommand,System.Data.Entity.Infrastructure.Interception.DbCommandInterceptionContext{System.Data.Common.DbDataReader})">
+            <summary>
+            Trace before executing reader.
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <param name="interceptionContext">Instance of <see cref="T:System.Data.Entity.Infrastructure.Interception.DbCommandInterceptionContext"/>.</param>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor.ReaderExecuted(System.Data.Common.DbCommand,System.Data.Entity.Infrastructure.Interception.DbCommandInterceptionContext{System.Data.Common.DbDataReader})">
+            <summary>
+            Trace after executing reader.
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <param name="interceptionContext">Instance of <see cref="T:System.Data.Entity.Infrastructure.Interception.DbCommandInterceptionContext"/>.</param>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor.ScalarExecuting(System.Data.Common.DbCommand,System.Data.Entity.Infrastructure.Interception.DbCommandInterceptionContext{System.Object})">
+            <summary>
+            Trace before executing scalar.
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <param name="interceptionContext">Instance of <see cref="T:System.Data.Entity.Infrastructure.Interception.DbCommandInterceptionContext"/>.</param>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFInterceptor.ScalarExecuted(System.Data.Common.DbCommand,System.Data.Entity.Infrastructure.Interception.DbCommandInterceptionContext{System.Object})">
+            <summary>
+            Trace after executing scalar.
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <param name="interceptionContext">Instance of <see cref="T:System.Data.Entity.Infrastructure.Interception.DbCommandInterceptionContext"/>.</param>
+        </member>
+        <member name="T:Amazon.XRay.Recorder.Handlers.EntityFramework.EFUtil">
+            <summary>
+            Utilities for EFInterceptor
+            </summary>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFUtil.ProcessBeginCommand(System.Data.Common.DbCommand,System.Nullable{System.Boolean})">
+            <summary>
+            Process command to begin subsegment.
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <param name="collectSqlQueriesOverride">Nullable to indicate whether to collect sql query text or not.</param>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFUtil.ProcessEndCommand">
+            <summary>
+            Process to end subsegment
+            </summary>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFUtil.ProcessCommandError(System.Exception)">
+            <summary>
+            Process exception.
+            </summary>
+            <param name="exception">Instance of <see cref="T:System.Exception"/>.</param>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFUtil.BuildSubsegmentName(System.Data.Common.DbCommand)">
+            <summary>
+            Builds the name of the subsegment in the format database@datasource
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <returns>Returns the formed subsegment name as a string.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFUtil.CollectSqlInformation(System.Data.Common.DbCommand,System.Nullable{System.Boolean})">
+            <summary>
+            Records the SQL information on the current subsegment,
+            </summary>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFUtil.GetDataBaseType(System.Data.Common.DbCommand)">
+            <summary>
+            Extract database_type from <see cref="T:System.Data.Common.DbCommand"/>.
+            </summary>
+            <param name="command">Instance of <see cref="T:System.Data.Common.DbCommand"/>.</param>
+            <returns>Type of database.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFUtil.GetUserId(System.Data.Common.DbConnectionStringBuilder)">
+            <summary>
+            Extract user id from <see cref="T:System.Data.Common.DbConnectionStringBuilder"/>.
+            </summary>
+            <param name="builder">Instance of <see cref="T:System.Data.Common.DbConnectionStringBuilder"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.EntityFramework.EFUtil.RemovePortNumberFromDataSource(System.String)">
+            <summary>
+            Removes the port number from data source.
+            </summary>
+            <param name="dataSource">The data source.</param>
+            <returns>The data source string with port number removed.</returns>
+        </member>
+    </members>
+</doc>

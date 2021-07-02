@@ -165,7 +165,7 @@ namespace CustomerProject.Controllers
                     //    dataCust.ImagePath = _folderName + "/" + avatar.FileName;
                     //}
 
-                   await  Data.Customers.CutomerLibrary.EditCustomerAsync(dataCust);
+                     Data.Customers.CutomerLibrary.EditCustomer(dataCust);
                     ViewBag.ErrorMessage = "Customer data was updated successfully";
                     return View("Error");
                     //return new HttpResponseMessage(HttpStatusCode.OK)
@@ -192,13 +192,13 @@ namespace CustomerProject.Controllers
         }
 
         [HttpPost]
-        public async Task<ViewResult> DeleteCustomer(int Id)
+        public ViewResult DeleteCustomer(int Id)
         {
             try
             {
                 if (Id != 0)
                 { 
-                   await  Data.Customers.CutomerLibrary.DeleteCustomerAsync(Id); 
+                    Data.Customers.CutomerLibrary.DeleteCustomer(Id); 
                 }
                 
                 var result = new List<CustomerProject.Models.Customer>();
@@ -225,7 +225,6 @@ namespace CustomerProject.Controllers
             catch (Exception e)
             {
                 //ViewBag.ErrorMessage = e.ToString();
-                throw e;
                 return View("Error");
             }
         }

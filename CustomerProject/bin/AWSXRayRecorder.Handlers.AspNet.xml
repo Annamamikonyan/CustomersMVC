@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AWSXRayRecorder.Handlers.AspNet</name>
+    </assembly>
+    <members>
+        <member name="T:Amazon.XRay.Recorder.Handlers.AspNet.AWSXRayASPNET">
+            <summary>
+            The class to intercept HTTP request for ASP.NET Framework.
+            For each request, <see cref="T:Amazon.XRay.Recorder.Handlers.AspNet.AWSXRayASPNET"/> will try to parse trace header
+            from HTTP request header, and determine if tracing is enabled. If enabled, it will
+            start a new segment before invoking inner handler. And end the segment before it returns
+            the response to outer handler.
+            </summary>
+        </member>
+        <member name="F:Amazon.XRay.Recorder.Handlers.AspNet.AWSXRayASPNET.XRayEntity">
+            <summary>
+            Key name that is used to store segment in the HttpApplication.Context object of the request.
+            </summary>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.AspNet.AWSXRayASPNET.GetSegmentNamingStrategy">
+            <summary>
+            Gets or sets the segment naming strategy.
+            </summary>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.AspNet.AWSXRayASPNET.SetSegmentNamingStrategy(Amazon.XRay.Recorder.Core.Strategies.SegmentNamingStrategy)">
+            <summary>
+            Gets or sets the segment naming strategy.
+            </summary>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.AspNet.AWSXRayASPNET.RegisterXRay(System.Web.HttpApplication,System.String)">
+            <summary>
+            Registers X-Ray for the current object of  <see cref="T:System.Web.HttpApplication"/> class. <see cref="E:System.Web.HttpApplication.BeginRequest"/>, 
+            <see cref="E:System.Web.HttpApplication.EndRequest"/>, <see cref="E:System.Web.HttpApplication.Error"/> event handlers are registered with X-Ray function.
+            A segment is created at the beginning of the request and closed at the end of the request.
+            </summary>
+            <param name="httpApplication">Instance of  <see cref="T:System.Web.HttpApplication"/> class.</param>
+            <param name="fixedName">Name to be used for all generated segments.</param>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.AspNet.AWSXRayASPNET.RegisterXRay(System.Web.HttpApplication,Amazon.XRay.Recorder.Core.Strategies.SegmentNamingStrategy)">
+            <summary>
+            Registers X-Ray for the current object of  <see cref="T:System.Web.HttpApplication"/> class. <see cref="E:System.Web.HttpApplication.BeginRequest"/>, 
+            <see cref="E:System.Web.HttpApplication.EndRequest"/>, <see cref="E:System.Web.HttpApplication.Error"/> event handlers are registered with X-Ray function.
+            </summary>
+            <param name="httpApplication">Instance of  <see cref="T:System.Web.HttpApplication"/> class.</param>
+            <param name="segmentNamingStrategy">Instance of  <see cref="T:Amazon.XRay.Recorder.Core.Strategies.SegmentNamingStrategy"/> class. Defines segment naming strategy.</param>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.AspNet.AWSXRayASPNET.ProcessHTTPRequest(System.Object,System.EventArgs)">
+            <summary>
+            Processes HTTP request.
+            </summary>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.AspNet.AWSXRayASPNET.ProcessHTTPResponse(System.Object,System.EventArgs)">
+            <summary>
+            Processes HTTP response.
+            </summary>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.AspNet.AWSXRayASPNET.ProcessHTTPError(System.Object,System.EventArgs)">
+            <summary>
+            Processes HTTP Error.
+            NOTE : if we receive unhandled exception in BeginRequest() of any class implementing <see cref="T:System.Web.IHttpModule"/> Interface, BeginRequest() 
+            of the current <see cref="T:System.Web.HttpApplication"/> is not executed (so no segment is created at this point).
+            </summary>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.AspNet.AWSXRayASPNET.GetTraceHeader(System.Web.HttpContext)">
+            <summary>
+            Returns instance of <see cref="T:Amazon.XRay.Recorder.Core.Internal.Entities.TraceHeader"/> class from given <see cref="T:System.Web.HttpContext"/> object.
+            </summary>
+        </member>
+    </members>
+</doc>

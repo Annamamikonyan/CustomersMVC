@@ -1,0 +1,348 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AWSXRayRecorder.Handlers.SqlServer</name>
+    </assembly>
+    <members>
+        <member name="T:Amazon.XRay.Recorder.Handlers.SqlServer.IDbCommandInterceptor">
+            <summary>
+            Intercepts DbCommands and records them in new Subsegments.
+            </summary>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.IDbCommandInterceptor.InterceptAsync``1(System.Func{System.Threading.Tasks.Task{``0}},System.Data.Common.DbCommand)">
+            <summary>
+            Begins a new Subsegment, executes the provided async operation,
+            and records the request in the "sql" member of the subsegment.
+            </summary>
+            <example>
+            <code>
+            await InterceptAsync(() => dbCommand.ExecuteNonQueryAsync(cancellationToken), dbCommand);
+            </code>
+            </example>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.IDbCommandInterceptor.Intercept``1(System.Func{``0},System.Data.Common.DbCommand)">
+            <summary>
+            Begins a new Subsegment, executes the provided operation,
+            and records the request in the "sql" member of the subsegment.
+            </summary>
+            <example>
+            <code>
+            await Intercept(() => dbCommand.ExecuteNonQuery(), dbCommand);
+            </code>
+            </example>
+        </member>
+        <member name="T:Amazon.XRay.Recorder.Handlers.SqlServer.DbCommandInterceptor">
+            <inheritdoc />
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.DbCommandInterceptor.InterceptAsync``1(System.Func{System.Threading.Tasks.Task{``0}},System.Data.Common.DbCommand)">
+            <inheritdoc />
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.DbCommandInterceptor.Intercept``1(System.Func{``0},System.Data.Common.DbCommand)">
+            <inheritdoc />
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.DbCommandInterceptor.CollectSqlInformation(System.Data.Common.DbCommand)">
+            <summary>
+            Records the SQL information on the current subsegment,
+            </summary>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.DbCommandInterceptor.BuildSubsegmentName(System.Data.Common.DbCommand)">
+            <summary>
+            Builds the name of the subsegment in the format database@datasource
+            </summary>
+            <param name="command"></param>
+            <returns>Returns the formed subsegment name as a string.</returns>
+        </member>
+        <member name="T:Amazon.XRay.Recorder.Handlers.SqlServer.SqlUtil">
+            <summary>
+            Utilities for SQL handlers
+            </summary>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.SqlUtil.SanitizeTsqlQuery(System.String)">
+            <summary>
+            Sanitizes the TSQL query.
+            </summary>
+            <param name="query">The query.</param>
+            <returns>Sanitized query string</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.SqlUtil.RemovePortNumberFromDataSource(System.String)">
+            <summary>
+            Removes the port number from data source.
+            </summary>
+            <param name="dataSource">The data source.</param>
+            <returns>The data source string with port number removed.</returns>
+        </member>
+        <member name="T:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand">
+            <summary>
+            Traceable wrapper of <see cref="T:System.Data.SqlClient.SqlCommand"/>. Currently synchronized and asynchronized call
+            are traced, which includes ExecuteNonQuery, ExecuteReader, ExecuteScalar and ExecuteXmlReader.
+            </summary>
+            <see cref="T:System.Data.SqlClient.SqlCommand" />
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.#ctor(System.Nullable{System.Boolean})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand"/> class.
+            </summary>
+            <param name="collectSqlQueries">
+            Include the <see cref="P:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.CommandText" /> in the sanitized_query section of 
+            the SQL subsegment. Parameterized values will appear in their tokenized form and will not be expanded.
+            You should not enable this flag if you are including sensitive information as clear text.
+            This flag will override any behavior configured by <see cref="P:Amazon.XRay.Recorder.Core.Internal.Utils.XRayOptions.CollectSqlQueries" />.
+            If a value is not provided, then the globally configured value will be used, which is false by default.
+            See the official documentation on <a href="https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlcommand.parameters?view=netframework-4.7.2">SqlCommand.Parameters</a>
+            </param>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.#ctor(System.String,System.Nullable{System.Boolean})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand"/> class.
+            </summary>
+            <param name="cmdText">The text of the query.</param>
+            <param name="collectSqlQueries">
+            Include the <see cref="P:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.CommandText" /> in the sanitized_query section of 
+            the SQL subsegment. Parameterized values will appear in their tokenized form and will not be expanded.
+            You should not enable this flag if you are including sensitive information as clear text.
+            This flag will override any behavior configured by <see cref="P:Amazon.XRay.Recorder.Core.Internal.Utils.XRayOptions.CollectSqlQueries" />.
+            If a value is not provided, then the globally configured value will be used, which is false by default.
+            See the official documentation on <a href="https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlcommand.parameters?view=netframework-4.7.2">SqlCommand.Parameters</a>
+            </param>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.#ctor(System.String,System.Data.SqlClient.SqlConnection,System.Nullable{System.Boolean})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand"/> class.
+            </summary>
+            <param name="cmdText">The text of the query.</param>
+            <param name="connection">The connection to an instance of SQL Server.</param>
+            <param name="collectSqlQueries">
+            Include the <see cref="P:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.CommandText" /> in the sanitized_query section of 
+            the SQL subsegment. Parameterized values will appear in their tokenized form and will not be expanded.
+            You should not enable this flag if you are including sensitive information as clear text.
+            This flag will override any behavior configured by <see cref="P:Amazon.XRay.Recorder.Core.Internal.Utils.XRayOptions.CollectSqlQueries" />.
+            If a value is not provided, then the globally configured value will be used, which is false by default.
+            See the official documentation on <a href="https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlcommand.parameters?view=netframework-4.7.2">SqlCommand.Parameters</a>
+            </param>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.#ctor(System.String,System.Data.SqlClient.SqlConnection,System.Data.SqlClient.SqlTransaction,System.Nullable{System.Boolean})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand"/> class.
+            </summary>
+            <param name="cmdText">The text of the query.</param>
+            <param name="connection">The connection to an instance of SQL Server.</param>
+            <param name="transaction">The <see cref="T:System.Data.SqlClient.SqlTransaction"/> in which the <see cref="T:System.Data.SqlClient.SqlCommand"/> executes.</param>
+            <param name="collectSqlQueries">
+            Include the <see cref="P:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.CommandText" /> in the sanitized_query section of 
+            the SQL subsegment. Parameterized values will appear in their tokenized form and will not be expanded.
+            You should not enable this flag if you are including sensitive information as clear text.
+            This flag will override any behavior configured by <see cref="P:Amazon.XRay.Recorder.Core.Internal.Utils.XRayOptions.CollectSqlQueries" />.
+            If a value is not provided, then the globally configured value will be used, which is false by default.
+            See the official documentation on <a href="https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlcommand.parameters?view=netframework-4.7.2">SqlCommand.Parameters</a>
+            </param>
+        </member>
+        <member name="E:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.StatementCompleted">
+            <summary>
+            Occurs when the execution of a Transact-SQL statement completes.
+            </summary>
+        </member>
+        <member name="P:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.InnerSqlCommand">
+            <summary>
+            Gets the inner SQL command.
+            </summary>
+        </member>
+        <member name="P:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.CommandText">
+            <summary>
+            Gets or sets the text command to run against the data source.
+            </summary>
+        </member>
+        <member name="P:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.CommandTimeout">
+            <summary>
+            Gets or sets the wait time before terminating the attempt to execute a command and generating an error.
+            </summary>
+        </member>
+        <member name="P:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.CommandType">
+            <summary>
+            Indicates or specifies how the <see cref="P:System.Data.Common.DbCommand.CommandText" /> property is interpreted.
+            </summary>
+        </member>
+        <member name="P:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.Connection">
+            <summary>
+            Gets or sets the <see cref="T:System.Data.Common.DbConnection" /> used by this <see cref="T:System.Data.Common.DbCommand" />.
+            </summary>
+        </member>
+        <member name="P:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.DesignTimeVisible">
+            <summary>
+            Gets or sets a value indicating whether the command object should be visible in a customized interface control.
+            </summary>
+        </member>
+        <member name="P:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.Parameters">
+            <summary>
+            Gets the collection of <see cref="T:System.Data.SqlClient.SqlParameter" /> objects.
+            </summary>
+        </member>
+        <member name="P:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.Transaction">
+            <summary>
+            Gets or sets the <see cref="T:System.Data.SqlClient.SqlTransaction" /> within which this <see cref="T:System.Data.SqlClient.SqlCommand" /> object executes.
+            </summary>
+        </member>
+        <member name="P:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.UpdatedRowSource">
+            <summary>
+            Gets or sets how command results are applied to the <see cref="T:System.Data.DataRow" /> when used by the Update method of a <see cref="T:System.Data.Common.DbDataAdapter" />.
+            </summary>
+        </member>
+        <member name="P:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.DbConnection">
+            <summary>
+            Gets or sets the <see cref="T:System.Data.Common.DbConnection" /> used by this <see cref="T:System.Data.Common.DbCommand" />.
+            </summary>
+        </member>
+        <member name="P:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.DbTransaction">
+            <summary>
+            Gets or sets the <see cref="P:System.Data.Common.DbCommand.DbTransaction" /> within which this <see cref="T:System.Data.Common.DbCommand" /> object executes.
+            </summary>
+        </member>
+        <member name="P:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.DbParameterCollection">
+            <summary>
+            Gets the collection of <see cref="T:System.Data.Common.DbParameter" /> objects.
+            </summary>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.Cancel">
+            <summary>
+            Attempts to cancels the execution of a <see cref="T:System.Data.SqlClient.SqlCommand" />.
+            </summary>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.Clone">
+            <summary>
+            Clones this instance.
+            </summary>
+            <returns>A new <see cref="T:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand"/> object that is a copy of this instance.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.CreateParameter">
+            <summary>
+            Creates the parameter. Wrapper of the same function in <see cref="T:System.Data.SqlClient.SqlCommand"/>.
+            </summary>
+            <returns>A System.Data.SqlClient.SqlParameter object.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.ExecuteNonQuery">
+            <summary>
+            Executes a SQL statement against a connection object. Wrapper of the same function in <see cref="T:System.Data.SqlClient.SqlCommand"/>.
+            </summary>
+            <returns>
+            The number of rows affected.
+            </returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.ExecuteNonQueryAsync(System.Threading.CancellationToken)">
+            <summary>
+            This is the asynchronous version of <see cref="M:System.Data.Common.DbCommand.ExecuteNonQuery" />. Providers should override with an appropriate implementation. 
+            The cancellation token may optionally be ignored.The default implementation invokes the synchronous <see cref="M:System.Data.Common.DbCommand.ExecuteNonQuery" /> method and 
+            returns a completed task, blocking the calling thread. The default implementation will return a cancelled task if passed an already cancelled cancellation token. 
+            Exceptions thrown by <see cref="M:System.Data.Common.DbCommand.ExecuteNonQuery" /> will be communicated via the returned Task Exception property.Do not invoke other methods
+            and properties of the DbCommand object until the returned Task is complete.
+            Wrapper of the same function in <see cref="T:System.Data.SqlClient.SqlCommand"/>.
+            </summary>
+            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+            <returns>
+            A task representing the asynchronous operation.
+            </returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.ExecuteReader">
+            <summary>
+            Executes the reader. Wrapper of the same function in <see cref="T:System.Data.SqlClient.SqlCommand"/>.
+            </summary>
+            <returns>A System.Data.SqlClient.SqlDataReader object.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.ExecuteReader(System.Data.CommandBehavior)">
+            <summary>
+            Executes the reader. Wrapper of the same function in <see cref="T:System.Data.SqlClient.SqlCommand"/>.
+            </summary>
+            <param name="behavior">The behavior.</param>
+            <returns>A System.Data.SqlClient.SqlDataReader object.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.ExecuteReaderAsync">
+            <summary>
+            Executes the reader asynchronous. Wrapper of the same function in <see cref="T:System.Data.SqlClient.SqlCommand"/>.
+            </summary>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.ExecuteReaderAsync(System.Threading.CancellationToken)">
+            <summary>
+            Executes the reader asynchronous. Wrapper of the same function in <see cref="T:System.Data.SqlClient.SqlCommand"/>.
+            </summary>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.ExecuteReaderAsync(System.Data.CommandBehavior)">
+            <summary>
+            Executes the reader asynchronous. Wrapper of the same function in <see cref="T:System.Data.SqlClient.SqlCommand"/>.
+            </summary>
+            <param name="behavior">The behavior.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.ExecuteReaderAsync(System.Data.CommandBehavior,System.Threading.CancellationToken)">
+            <summary>
+            Executes the reader asynchronous. Wrapper of the same function in <see cref="T:System.Data.SqlClient.SqlCommand"/>.
+            </summary>
+            <param name="behavior">The behavior.</param>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.ExecuteScalar">
+            <summary>
+            Executes the query and returns the first column of the first row in the result set returned by the query. All other columns and rows are ignored.
+            Wrapper of the same function in <see cref="T:System.Data.SqlClient.SqlCommand"/>.
+            </summary>
+            <returns>
+            The first column of the first row in the result set.
+            </returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.ExecuteScalarAsync(System.Threading.CancellationToken)">
+            <summary>
+            This is the asynchronous version of <see cref="M:System.Data.Common.DbCommand.ExecuteScalar" />. Providers should override with an appropriate implementation. 
+            The cancellation token may optionally be ignored.The default implementation invokes the synchronous <see cref="M:System.Data.Common.DbCommand.ExecuteScalar" /> method and returns 
+            a completed task, blocking the calling thread. The default implementation will return a cancelled task if passed an already cancelled cancellation token. Exceptions thrown by ExecuteScalar will be
+            communicated via the returned Task Exception property.Do not invoke other methods and properties of the DbCommand object until the returned Task is complete.
+            Wrapper of the same function in <see cref="T:System.Data.SqlClient.SqlCommand"/>.
+            </summary>
+            <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+            <returns>
+            A task representing the asynchronous operation.
+            </returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.ExecuteXmlReader">
+            <summary>
+            Executes the XML reader. Wrapper of the same function in <see cref="T:System.Data.SqlClient.SqlCommand"/>.
+            </summary>
+            <returns>An System.Xml.XmlReader object.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.ExecuteXmlReaderAsync">
+            <summary>
+            Executes the XML reader asynchronous. Wrapper of the same function in <see cref="T:System.Data.SqlClient.SqlCommand"/>.
+            </summary>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.ExecuteXmlReaderAsync(System.Threading.CancellationToken)">
+            <summary>
+            Executes the XML reader asynchronous. Wrapper of the same function in <see cref="T:System.Data.SqlClient.SqlCommand"/>.
+            </summary>
+            <param name="cancellationToken">The cancellation token.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.Prepare">
+            <summary>
+            Creates a prepared (or compiled) version of the command on the data source. Wrapper of the same function in <see cref="T:System.Data.SqlClient.SqlCommand"/>.
+            </summary>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.CreateDbParameter">
+            <summary>
+            Creates a new instance of a <see cref="T:System.Data.Common.DbParameter" /> object. Wrapper of the same function in <see cref="T:System.Data.SqlClient.SqlCommand"/>.
+            </summary>
+            <returns>
+            A <see cref="T:System.Data.Common.DbParameter" /> object.
+            </returns>
+        </member>
+        <member name="M:Amazon.XRay.Recorder.Handlers.SqlServer.TraceableSqlCommand.ExecuteDbDataReader(System.Data.CommandBehavior)">
+            <summary>
+            Executes the command text against the connection. Wrapper of the same function in <see cref="T:System.Data.SqlClient.SqlCommand"/>.
+            </summary>
+            <param name="behavior">An instance of <see cref="T:System.Data.CommandBehavior" />.</param>
+            <returns>
+            A task representing the operation.
+            </returns>
+        </member>
+    </members>
+</doc>
